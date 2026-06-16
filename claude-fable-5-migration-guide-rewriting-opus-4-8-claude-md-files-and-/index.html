@@ -1,0 +1,89 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Claude Fable 5 Migration Guide: Rewriting Opus 4.8 CLAUDE.md Files and System Prompts for Goal-Reason-Boundary Structure</title><meta name=description content="A concrete, step-by-step guide to migrating CLAUDE.md files and system prompts from Claude Opus 4.8 to Claude Fable 5 using automated tooling, prescriptive-debt audits, and the Goal-Reason-Boundary prompt architecture."><link rel=canonical href="https://stickwithfiddle-sys.github.io/markloom-guides/claude-fable-5-migration-guide-rewriting-opus-4-8-claude-md-files-and-/"><meta property="og:type" content="article"><meta property="og:title" content="Claude Fable 5 Migration Guide: Rewriting Opus 4.8 CLAUDE.md Files and System Prompts for Goal-Reason-Boundary Structure"><meta property="og:description" content="A concrete, step-by-step guide to migrating CLAUDE.md files and system prompts from Claude Opus 4.8 to Claude Fable 5 using automated tooling, prescriptive-debt audits, and the Goal-Reason-Boundary prompt architecture."><style>:root{--ink:#1a1d24;--dim:#5a6473;--bg:#fbfaf8;--card:#fff;--line:#e7e4de;--accent:#b4622a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font:17px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+nav.bc{font-size:13px;color:var(--dim);margin-bottom:18px}nav.bc a{color:var(--dim);text-decoration:none}
+nav.bc a:hover{color:var(--accent)}
+h1{font-size:33px;line-height:1.2;margin:.2em 0 .3em}h2{font-size:23px;margin:1.6em 0 .5em}
+h3{font-size:18px;margin:1.3em 0 .4em}a{color:var(--accent)}
+.dek{color:var(--dim);font-size:18px;margin:0 0 18px}
+.tldr{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+border-radius:10px;padding:12px 16px;margin:0 0 26px;font-size:16px}
+pre{background:#15181e;color:#e6e9ef;border-radius:10px;padding:14px 16px;overflow:auto;font-size:14px;line-height:1.5}
+code{background:#eee9e2;padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre code{background:none;padding:0;font-size:13.5px}
+blockquote{border-left:3px solid var(--line);margin:0;padding:.2em 1em;color:var(--dim)}
+.updated{color:var(--dim);font-size:13px;margin-top:6px}
+.related{margin-top:48px;border-top:1px solid var(--line);padding-top:18px}
+.related h2{font-size:16px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+.related ul{padding-left:18px}.cta{margin-top:36px;background:var(--card);border:1px solid var(--line);
+border-radius:12px;padding:18px 20px}.cards{display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:var(--accent)}.card b{display:block;font-size:17px}.card span{color:var(--dim);font-size:14px}
+footer{margin-top:60px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:16px}</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Unfair HQ Guides", "url": "https://stickwithfiddle-sys.github.io/markloom-guides"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Claude Fable 5 Migration Guide: Rewriting Opus 4.8 CLAUDE.md Files and System Prompts for Goal-Reason-Boundary", "description": "A concrete, step-by-step guide to migrating CLAUDE.md files and system prompts from Claude Opus 4.8 to Claude Fable 5 using automated tooling, prescriptive-debt audits, and the Goal-Reason-Boundary prompt architecture.", "datePublished": "2026-06-15", "dateModified": "2026-06-15", "author": {"@type": "Organization", "name": "Unfair HQ Guides"}, "mainEntityOfPage": "https://stickwithfiddle-sys.github.io/markloom-guides/claude-fable-5-migration-guide-rewriting-opus-4-8-claude-md-files-and-/", "keywords": "Claude Fable 5, prompt engineering, system prompts, CLAUDE.md, Opus 4.8 migration"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Unfair HQ Guides", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/"}, {"@type": "ListItem", "position": 2, "name": "Claude Fable 5 Migration Guide: Rewriting Opus 4.8 CLAUDE.md", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/claude-fable-5-migration-guide-rewriting-opus-4-8-claude-md-files-and-/"}]}</script></head><body><div class=wrap>
+<nav class=bc><a href="https://stickwithfiddle-sys.github.io/markloom-guides/">Unfair HQ Guides</a> › Claude Fable 5 Migration Guide: Rewriting Opus 4</nav>
+<article><h1>Claude Fable 5 Migration Guide: Rewriting Opus 4.8 CLAUDE.md Files and System Prompts for Goal-Reason-Boundary Structure</h1>
+<p class=dek>A concrete, step-by-step guide to migrating CLAUDE.md files and system prompts from Claude Opus 4.8 to Claude Fable 5 using automated tooling, prescriptive-debt audits, and the Goal-Reason-Boundary prompt architecture.</p>
+<h2>Run the Automated Migration and Audit Prescriptive Debt</h2>
+<p>In Claude Code, invoke the bundled Claude API skill with:</p>
+<pre><code class="language-shell">/claude-api migrate this project to claude-fable-5</code></pre>
+<p>The skill pauses to confirm scope—whether to scan the entire working directory, a subdirectory, or a specific file list—before writing any changes. Once confirmed, it performs the model ID swap, applies breaking parameter changes, replaces prefills, and applies effort calibration for the target model, then produces a checklist of items to verify manually. It also detects client platforms such as Amazon Bedrock, Vertex AI, Claude Platform on AWS, and Microsoft Foundry, automatically adjusting model ID formats and feature changes for each.</p>
+<p>After the skill finishes, begin manual review. Open every CLAUDE.md and system prompt and strip patterns that micromanage reasoning. As noted above, prescriptive instructions tuned for Opus 4.8 often degrade Claude Fable 5 output. Look for forced step labels, rigid output templates, or negated constraints that attempt to steer behavior through avoidance rather than boundaries. Delete scaffolding that duplicates work the model now handles natively. Use the migration as a prompt to re-evaluate which tools, guardrails, and formatting rules are still necessary; many become obsolete when the prompt instead supplies a clear goal, the reason behind it, and explicit boundaries.</p>
+<h2>Map Legacy Instructions to Goal-Reason-Boundary Structure</h2>
+<p>As noted above, prescriptive patterns degrade Fable 5 output. Replace dense imperative sequences with four explicit blocks drawn from the Fable 5 prompting pattern: Goal, Reason, Boundary, and Verification.</p>
+<p>Kick off the migration using the bundled API skill:</p>
+<pre><code class="language-bash">/claude-api migrate this project to claude-fable-5</code></pre>
+<p>After the skill swaps model IDs and flags breaking changes, rewrite the generated CLAUDE.md. Remove sequential scaffolding like "First do X, then Y"—Fable 5 determines its own execution order. Map every surviving constraint into one of the four blocks. Anything that does not describe an outcome, a context, or a hard limit is deleted.</p>
+<p>Legacy CLAUDE.md fragment:</p>
+<pre><code class="language-markdown">Always use TypeScript. Never commit secrets. First write tests, then implement the function. Export everything from index.ts. Don&#x27;t use external state. Validate inputs with zod. End with a summary comment.</code></pre>
+<p>Rewritten to Goal-Reason-Boundary-Verification:</p>
+<pre><code class="language-markdown">Goal: Implement the utility in TypeScript with full test coverage and a single index export.
+
+Reason: The codebase ships as an npm package; internal consumers expect a flat API surface and zero runtime dependencies to keep install size minimal.
+
+Boundary: Stack: TypeScript only. Secrets: none in repo. State: pure functions only. Validation: zod schemas required. Output: free-form prose, no mandatory section headers.
+
+Verification: Confirm every public function has a corresponding passing test before returning the diff.</code></pre>
+<p>Process-order prescriptions and cosmetic guardrails disappear because they are neither goals, reasons, nor boundaries. Verification condenses former guardrails into one self-check the model runs before emitting output.</p>
+<h2>Convert Negations to Quantified Targets</h2>
+<p>Opus 4.8 <code>CLAUDE.md</code> files frequently lean on prohibitions: "don't be verbose," "never import X directly," or "avoid nested loops." These negative constraints force the model to infer what acceptable behavior looks like. Quantified targets are cleaner than vague negations. As noted above, prescriptive patterns degrade Fable 5 output. Replace each prohibition with a measurable Boundary.</p>
+<p>For length limits, rewrite subjective warnings into hard numbers. Instead of:</p>
+<pre><code class="language-markdown">- Don&#x27;t be verbose.</code></pre>
+<p>use:</p>
+<pre><code class="language-markdown">- Boundary: Keep responses under 200 words.</code></pre>
+<p>Apply the same conversion to performance and quality guardrails. Latency hints become millisecond budgets; dependency rules become maximum counts; test requirements become coverage percentages. A subjective line like "avoid slow operations" becomes a concrete limit:</p>
+<pre><code class="language-yaml">Boundary:
+  response_latency_ms: &lt; 150
+  direct_dependencies: &lt;= 3
+  test_coverage_percent: &gt;= 80</code></pre>
+<p>If a constraint cannot be expressed as a scalar, define an explicit allowed set rather than a negated forbidden set. Replace "never use deprecated APIs" with "API whitelist: [v2/auth, v2/events]" so the Boundary is enumerable and verifiable. Similarly, convert stylistic negations such as "don't use jargon" into positive, testable statements like "Flesch Reading Ease score &gt;= 60." Every subjective guardrail in your CLAUDE.md should resolve to a numeric threshold, a bounded enumeration, or an objectively measurable standard. This removes ambiguity from the reasoning path and lets Fable 5 self-verify against the Boundary.</p>
+<h2>Remove Obsolete Scaffolding and Guardrails</h2>
+<p>As noted above, prescriptive patterns degrade Fable 5 output. Opus 4.8 system prompts frequently relied on rigid scaffolding—forced step templates, mandatory section headers, or explicit reasoning chains—to keep the model aligned and prevent drift. Fable 5's capability improvements render these training wheels unnecessary; the model now interprets them as artificial constraints that restrict useful exploration and add token overhead. Strip them entirely.</p>
+<p>Replace a prescriptive STEP template with a single Boundary declaration:</p>
+<pre><code class="language-markdown">&lt;!-- Before: Opus 4.8 scaffolding --&gt;
+You must follow this exact structure:
+STEP 1: Analyze the problem
+STEP 2: List trade-offs
+STEP 3: Provide recommendation</code></pre>
+<pre><code class="language-markdown">&lt;!-- After: Fable 5 boundary --&gt;
+Structure: free-form prose, no mandatory section headers.
+Boundary: reason aloud, but organize the argument however best serves clarity.</code></pre>
+<p>This frees the model to sequence its own reasoning rather than forcing it into a rigid outline.</p>
+<p>If you maintain multiple CLAUDE.md files, batch the cleanup with the Claude API skill:</p>
+<pre><code class="language-bash">/claude-api migrate this project to claude-fable-5</code></pre>
+<p>The skill applies the model ID swap and flags legacy scaffolding patterns across your codebase. After it runs, audit remaining guardrails carefully. Explicit prohibitions like "Do not skip steps" or canned response skeletons add no value for this model; Fable 5 handles planning internally when given a clear Goal, Reason, and Boundary. Trust the boundary and remove the rails.</p>
+<h2>Tune Effort and Validate on Hard Problems</h2>
+<p>Run the bundled Claude API skill to perform the model ID swap and platform-specific adjustments. Confirm the migration scope when prompted:</p>
+<pre><code class="language-bash">/claude-api migrate this project to claude-fable-5</code></pre>
+<p>The skill applies effort calibration and breaking parameter changes across your codebase, handling prefill replacement and model ID formatting for Amazon Bedrock, Vertex AI, Claude Platform on AWS, and Microsoft Foundry clients. It asks you to confirm the scope—working directory, subdirectory, or file list—before editing anything. Once the automated edits are complete, review Fable 5-specific API parameters, such as adaptive thinking configuration. Check the generated checklist for any items flagged for manual verification.</p>
+<p>Do not waste validation cycles on trivial prompts. Test against your hardest unsolved problems—the tasks that previously took hours or days—because teams see the best outcomes when they apply Fable 5 to complex, long-running work rather than simple workloads. Lightweight smoke tests will undersell its capability range and provide misleading signal about whether your prompt structure is correct.</p>
+<p>Verify that outputs satisfy the Verification criteria defined in your Boundary block. For example:</p>
+<pre><code class="language-markdown">Boundary:
+- Format: raw JSON, no markdown fences
+- Verification: response validates against OrderSchema; total_price equals sum of line_items</code></pre>
+<p>If the criteria fail, adjust the Reason or tighten the Boundary constraints instead of layering on prescriptive step-by-step instructions. Treat Verification as the final gate that keeps the model aligned without introducing procedural debt.</p>
+<hr>
+<p><em>I packaged the setup above into a ready-to-use kit — <strong>Claude Fable 5 Migration &amp; Prompt-Rewrite Kit (16 Items)</strong> — for anyone who'd rather copy-paste than wire it from scratch: <a href="https://unfairhq.gumroad.com/l/bnyyq" rel="noopener">https://unfairhq.gumroad.com/l/bnyyq</a>.</em></p>
+<p class=updated>Last updated: 2026-06-15</p></article>
+<footer>Unfair HQ Guides — practical, source-checked guides for builders.</footer>
+</div></body></html>

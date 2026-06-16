@@ -1,0 +1,12 @@
+# Unfair HQ Guides
+
+> Practical, source-checked guides for developers and builders.
+
+## Guides
+- [How to Stop Context Rot in 1M-Token AI Coding Agents: A Practical Guide to Memory Budgeting and Session Discipline](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-stop-context-rot-in-1m-token-ai-coding-agents-a-practical-guide/): Massive context windows do not guarantee recall. Use compaction, hard session budgets, and ruthless 
+- [Claude Fable 5 Migration Guide: Rewriting Opus 4.8 CLAUDE.md Files and System Prompts for Goal-Reason-Boundary Structure](https://stickwithfiddle-sys.github.io/markloom-guides/claude-fable-5-migration-guide-rewriting-opus-4-8-claude-md-files-and-/): A concrete, step-by-step guide to migrating CLAUDE.md files and system prompts from Claude Opus 4.8 
+- [From Vibe Coding to Production: How to Build a Traceable PRD-to-Prompt Workflow for Shipping Maintainable AI Code](https://stickwithfiddle-sys.github.io/markloom-guides/from-vibe-coding-to-production-how-to-build-a-traceable-prd-to-prompt-/): A concrete, repeatable workflow that closes the gap between AI-generated prototypes and production d
+- [A Three-Layer PRD-to-Prompt Workflow for Shipping Vibe-Coded Projects to Production](https://stickwithfiddle-sys.github.io/markloom-guides/a-three-layer-prd-to-prompt-workflow-for-shipping-vibe-coded-projects-/): How to move from AI-generated prototypes to production by locking scope, slicing vertically, and gat
+- [How to Launch a SaaS Solo: The 12 Marketing Assets You Need Before Going Live (And the AI Prompts to Create Them in One Afternoon)](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-launch-a-saas-solo-the-12-marketing-assets-you-need-before-goin/): A concrete pre-launch playbook for solo developers: validate your idea with AI, build only what you 
+- [The Solo Founder's Guide to SaaS Launch Copy: How to Write Landing Pages, Product Hunt Posts, and Cold Outreach Without a Marketing Team](https://stickwithfiddle-sys.github.io/markloom-guides/the-solo-founder-s-guide-to-saas-launch-copy-how-to-write-landing-page/): A concrete playbook for developers shipping solo. Lock your ICP, write high-converting landing pages
+- [How to Write a High-Converting SaaS Landing Page as a Solo Founder (No Copywriter Needed)](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-write-a-high-converting-saas-landing-page-as-a-solo-founder-no-/): A step-by-step guide for developers to craft landing page copy that actually converts — using a clea

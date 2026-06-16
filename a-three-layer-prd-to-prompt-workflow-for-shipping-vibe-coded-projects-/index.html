@@ -1,0 +1,91 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>A Three-Layer PRD-to-Prompt Workflow for Shipping Vibe-Coded Projects to Production</title><meta name=description content="How to move from AI-generated prototypes to production by locking scope, slicing vertically, and gating every compile."><link rel=canonical href="https://stickwithfiddle-sys.github.io/markloom-guides/a-three-layer-prd-to-prompt-workflow-for-shipping-vibe-coded-projects-/"><meta property="og:type" content="article"><meta property="og:title" content="A Three-Layer PRD-to-Prompt Workflow for Shipping Vibe-Coded Projects to Production"><meta property="og:description" content="How to move from AI-generated prototypes to production by locking scope, slicing vertically, and gating every compile."><style>:root{--ink:#1a1d24;--dim:#5a6473;--bg:#fbfaf8;--card:#fff;--line:#e7e4de;--accent:#b4622a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font:17px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+nav.bc{font-size:13px;color:var(--dim);margin-bottom:18px}nav.bc a{color:var(--dim);text-decoration:none}
+nav.bc a:hover{color:var(--accent)}
+h1{font-size:33px;line-height:1.2;margin:.2em 0 .3em}h2{font-size:23px;margin:1.6em 0 .5em}
+h3{font-size:18px;margin:1.3em 0 .4em}a{color:var(--accent)}
+.dek{color:var(--dim);font-size:18px;margin:0 0 18px}
+.tldr{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+border-radius:10px;padding:12px 16px;margin:0 0 26px;font-size:16px}
+pre{background:#15181e;color:#e6e9ef;border-radius:10px;padding:14px 16px;overflow:auto;font-size:14px;line-height:1.5}
+code{background:#eee9e2;padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre code{background:none;padding:0;font-size:13.5px}
+blockquote{border-left:3px solid var(--line);margin:0;padding:.2em 1em;color:var(--dim)}
+.updated{color:var(--dim);font-size:13px;margin-top:6px}
+.related{margin-top:48px;border-top:1px solid var(--line);padding-top:18px}
+.related h2{font-size:16px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+.related ul{padding-left:18px}.cta{margin-top:36px;background:var(--card);border:1px solid var(--line);
+border-radius:12px;padding:18px 20px}.cards{display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:var(--accent)}.card b{display:block;font-size:17px}.card span{color:var(--dim);font-size:14px}
+footer{margin-top:60px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:16px}</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Unfair HQ Guides", "url": "https://stickwithfiddle-sys.github.io/markloom-guides"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "A Three-Layer PRD-to-Prompt Workflow for Shipping Vibe-Coded Projects to Production", "description": "How to move from AI-generated prototypes to production by locking scope, slicing vertically, and gating every compile.", "datePublished": "2026-06-13", "dateModified": "2026-06-13", "author": {"@type": "Organization", "name": "Unfair HQ Guides"}, "mainEntityOfPage": "https://stickwithfiddle-sys.github.io/markloom-guides/a-three-layer-prd-to-prompt-workflow-for-shipping-vibe-coded-projects-/", "keywords": "vibe coding, AI-assisted development, production workflow, PRD, prompt engineering"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Unfair HQ Guides", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/"}, {"@type": "ListItem", "position": 2, "name": "A Three-Layer PRD-to-Prompt Workflow for Shipping Vibe-Coded", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/a-three-layer-prd-to-prompt-workflow-for-shipping-vibe-coded-projects-/"}]}</script></head><body><div class=wrap>
+<nav class=bc><a href="https://stickwithfiddle-sys.github.io/markloom-guides/">Unfair HQ Guides</a> › A Three-Layer PRD-to-Prompt Workflow for Shippin</nav>
+<article><h1>A Three-Layer PRD-to-Prompt Workflow for Shipping Vibe-Coded Projects to Production</h1>
+<p class=dek>How to move from AI-generated prototypes to production by locking scope, slicing vertically, and gating every compile.</p>
+<h2>Why Vibe-Coded Projects Stall Without a Workflow</h2>
+<p>Vibe coding can scaffold a working interface in minutes, yet most projects never leave the prototype folder. The generated code compiles locally, but the transition to a deployed environment is exactly where generated stacks collapse. Without a workflow, the rapid feedback loop that makes vibe coding attractive turns into an accumulation of brittle dependencies and untested assumptions.</p>
+<p>A root cause is imprecise intent. When the prompt is ambiguous, the model mirrors that ambiguity in architecture choices, data models, and API boundaries. The result is not a codebase but a collection of fragments that integrate only while the session context lasts. A typical symptom is a build that succeeds in the IDE but fails in CI because environment variables and build targets were never specified in the original prompt.</p>
+<p>A PRD-to-prompt workflow fixes this by forcing explicit scope, vertical slices, and compile gates before the first line of generated code ships. The PRD locks scope and sequences delivery into full-stack slices, preventing a quick experiment from silently becoming the production foundation. Enforcing a type-check gate before the next slice begins keeps errors from compounding:</p>
+<pre><code class="language-bash">npx tsc --noEmit</code></pre>
+<p>By treating the PRD as the contract instead of the chat history, teams replace open-ended generation with ordered, verifiable steps. Scope is frozen, slices are defined, and the local-to-deploy gap is closed before deployment.</p>
+<h2>Layer 1 — Lock Scope with a Constraint-Driven PRD</h2>
+<p>Start with a strong, detailed vision of what you want to build and how it should work. The PRD is not a feature wishlist; it is a scope contract. Before any code is generated, write down user stories, a draft data model, API boundaries, and explicit non-goals. Constraints matter because they prevent scope creep when the agent suggests tangential features that are not in scope, which is the fastest way to lose a weekend to a chat window.</p>
+<p>Keep the PRD visible inside the agent context so every generation is anchored to the same constraints. One way to do this is to include the PRD as a pinned file or system prompt reference, or to paste the relevant section at the top of each prompt thread. Do not move to generation until the PRD is frozen. If the agent proposes a new table, endpoint, or UI flow that is not in the document, the answer is no; changes to scope must be deliberate edits to the PRD, not ad-hoc prompt drift.</p>
+<p>A minimal PRD might look like this:</p>
+<pre><code class="language-markdown">User Stories:
+- As a user, I can create an account with email and password.
+- As a user, I can export my data as JSON.
+
+Non-Goals:
+- No OAuth providers in v1.
+- No real-time collaboration.
+
+Data Model:
+User: { id: UUID, email: string, createdAt: Date }</code></pre>
+<pre><code class="language-typescript">// API boundary: auth routes only
+app.post(&#x27;/api/auth/register&#x27;, validateRegister, authController.register);</code></pre>
+<p>This locks the surface area. When the agent later suggests adding social login or WebSockets, you point to the non-goals list and stay on track. Treat the PRD as the single source of truth. If a requirement must change, update the document first, then regenerate the plan. This discipline keeps the project from becoming a pile of disconnected experiments that bypass the original requirements.</p>
+<h2>Layer 2 — Plan Vertical Slices Before Prompting</h2>
+<p>Once the PRD is frozen, ask the agent to generate a step-by-step actionable plan that builds the app in phases using a vertical slice method. Each slice must span the full stack—database schema, API contract, and UI—ordered by increasing complexity so that every phase ships a demonstrable feature. Resist the temptation to let the agent batch all schema work first; a vertical slice forces integration from day one. A typical prompt for this looks like:</p>
+<pre><code class="language-text">Given the locked PRD, output an implementation plan as numbered vertical slices. Each slice must include schema changes, API routes, and UI components. Order by complexity so slice 1 is end-to-end and deployable.</code></pre>
+<p>An example first slice for a project tracker might contain:</p>
+<pre><code class="language-sql">CREATE TABLE projects (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  created_at timestamptz DEFAULT now()
+);</code></pre>
+<pre><code class="language-ts">app.post(&#x27;/projects&#x27;, async (c) =&gt; {
+  const body = await c.req.json();
+  const row = await db.insert(projects).values(body).returning();
+  return c.json(row, 201);
+});</code></pre>
+<pre><code class="language-tsx">export default function ProjectsPage() {
+  const { data } = useQuery({ queryKey: [&#x27;projects&#x27;], queryFn: fetchProjects });
+  return &lt;ul&gt;{data?.map(p =&gt; &lt;li key={p.id}&gt;{p.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}</code></pre>
+<p>Keep this plan in the agent's context window as a strict sequence. Do not let the LLM decide slice ordering or introduce unplanned architecture without validation; the human maintains the roadmap. Enforce compile gates at every slice (see Layer 3). Working in integrated slices surfaces mismatches between the schema and the UI immediately, whereas a layer-by-layer approach often leaves you with orphaned tables and unused endpoints that are harder to prune once the codebase grows.</p>
+<h2>Layer 3 — Gate Every Slice and Maintain a Living Context Map</h2>
+<p>Treat every vertical slice as a deployable unit that must exit cleanly before the next slice begins. Running the TypeScript compiler with no emit after each slice closes the local-to-deploy gap and catches type errors while they are still cheap to fix.</p>
+<pre><code class="language-bash">npx tsc --noEmit</code></pre>
+<p>If the command exits non-zero, fix the errors immediately; do not prompt for the next slice until it returns zero. This prevents error accumulation at the point of introduction and keeps the branch in a shippable state. A clean gate means you can deploy any completed slice on demand without a surprise integration phase or hidden type regressions.</p>
+<p>If you let the data model drift, one bad assumption can infect every subsequent slice. Maintain your own mental map of how the pieces connect and keep a living context document updated after each slice. Append a brief summary of what was built, which files changed, and any deferred decisions or open questions.</p>
+<pre><code class="language-markdown">## Slice 3: Checkout flow
+- Added `order.ts` schema, `createOrder` server action
+- Deferred: payment webhook retry logic
+- Next: inventory decrement on confirmation</code></pre>
+<p>Feed this summary back into the next prompt so the agent does not hallucinate cross-slice dependencies. When the agent sees the exact state of the system, it generates code that respects existing contracts rather than inventing new ones. This discipline turns a prototype stream into a production branch.</p>
+<h2>References</h2>
+<p>The sources below support the workflow described above. Each reference corresponds to a specific layer or gate in the PRD-to-prompt pipeline. SitePoint, "Production Vibe Coding Workflow: From Prompt to Deploy" — https://www.sitepoint.com/production-vibe-coding-workflow. This article outlines the end-to-end deployment path for vibe-coded projects and introduces compile gates as a mechanism for closing the local-to-production gap before errors compound across the codebase. AIM Consulting, "Vibe Coding in Practice: Patterns, Pitfalls, and Prompting Strategies" — https://aimconsulting.com/insights/vibe-coding-practice-patterns-pitfalls-prompting. The authors identify iterative refinement and structured prompting as critical patterns for maintaining code quality when working with AI agents across multiple generation sessions. Reddit r/ClaudeAI, "The Ultimate Vibe Coding Guide" — https://www.reddit.com/r/ClaudeAI/comments/1kivv0w/the_ultimate_vibe_coding_guide. This practitioner guide emphasizes the importance of a detailed initial vision and clear input constraints before engaging an LLM on implementation tasks. Reddit r/vibecoding, "Anyone else tired of starting vibe coding projects that turn into complete disasters halfway through?" — https://www.reddit.com/r/vibecoding/comments/1nq2clq/anyone_else_tired_of_starting_vibe_coding. The thread documents common failure modes when context is lost mid-project, reinforcing the need for a maintained mental map of architecture and data flow. Dev.to/wasp, "A Structured Workflow for 'Vibe Coding' Full-Stack Apps" — https://dev.to/wasp/a-structured-workflow-for-vibe-coding-full-stack-apps-352l. This post defines the vertical slice method adapted for LLM-assisted development, progressing complexity from database schema to user interface in discrete, testable phases.</p>
+<h2>References for further reading</h2>
+<p>_Sources consulted while researching this guide, included so you can verify the details and go deeper. Listing them is not a claim that every line was independently fact-checked._</p>
+<ul><li><a href="https://www.facebook.com/groups/vibecodinglife/posts/1945593672695827" rel="noopener">Hey vibe coders I wanted to share my current vibe coding workflow ...</a></li><li><a href="https://www.youtube.com/watch?v=qIO9Mg1Man4" rel="noopener">AI Vibe Coding Tutorial + Workflow (Cursor, Best Practices, PRD ...</a></li><li><a href="https://dev.to/dohkoai/5-vibe-coding-workflows-that-actually-ship-production-code-in-2026-1nmn" rel="noopener">5 Vibe Coding Workflows That Actually Ship Production Code in 2026 - DEV Community</a></li><li><a href="https://monday.com/blog/vibe-coding/prompt-to-prod" rel="noopener">Prompt to Prod: Build Production-Ready AI Workflows</a></li><li><a href="https://medium.com/design-bootcamp/vibecoding-a-practical-workflow-for-real-shipping-d14d66a44d3e" rel="noopener">Vibecoding: A Practical Workflow for Real Shipping</a></li></ul>
+<hr>
+<p><em>I packaged the setup above into a ready-to-use kit — <strong>Spec-to-Ship: The Vibe Coder's Build Kit (16 Items)</strong> — for anyone who'd rather copy-paste than wire it from scratch: <a href="https://unfairhq.gumroad.com/l/euyyyi" rel="noopener">https://unfairhq.gumroad.com/l/euyyyi</a>.</em></p>
+<p class=updated>Last updated: 2026-06-13</p></article>
+<section class=related><h2>Related guides</h2><ul>
+<li><a href="https://stickwithfiddle-sys.github.io/markloom-guides/from-vibe-coding-to-production-how-to-build-a-traceable-prd-to-prompt-/">From Vibe Coding to Production: How to Build a Traceable PRD-to-Prompt Workflow for Shipping Maintainable AI Code</a></li>
+</ul></section>
+<footer>Unfair HQ Guides — practical, source-checked guides for builders.</footer>
+</div></body></html>
