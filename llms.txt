@@ -3,6 +3,7 @@
 > Practical, source-checked guides for developers and builders.
 
 ## Guides
+- [How to Build a Private Offline Voice Assistant with Gemma 4 12B: A Complete Local Setup Guide](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-private-offline-voice-assistant-with-gemma-4-12b-a-comp/): A developer’s guide to running Google’s 11.95B-parameter multimodal model with local STT/TTS on a 16
 - [How to Stop Context Rot in 1M-Token AI Coding Agents: A Practical Guide to Memory Budgeting and Session Discipline](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-stop-context-rot-in-1m-token-ai-coding-agents-a-practical-guide/): Massive context windows do not guarantee recall. Use compaction, hard session budgets, and ruthless 
 - [Claude Fable 5 Migration Guide: Rewriting Opus 4.8 CLAUDE.md Files and System Prompts for Goal-Reason-Boundary Structure](https://stickwithfiddle-sys.github.io/markloom-guides/claude-fable-5-migration-guide-rewriting-opus-4-8-claude-md-files-and-/): A concrete, step-by-step guide to migrating CLAUDE.md files and system prompts from Claude Opus 4.8 
 - [From Vibe Coding to Production: How to Build a Traceable PRD-to-Prompt Workflow for Shipping Maintainable AI Code](https://stickwithfiddle-sys.github.io/markloom-guides/from-vibe-coding-to-production-how-to-build-a-traceable-prd-to-prompt-/): A concrete, repeatable workflow that closes the gap between AI-generated prototypes and production d

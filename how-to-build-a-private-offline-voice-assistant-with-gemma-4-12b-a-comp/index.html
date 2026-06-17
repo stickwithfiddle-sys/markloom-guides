@@ -1,0 +1,119 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>How to Build a Private Offline Voice Assistant with Gemma 4 12B: A Complete Local Setup Guide</title><meta name=description content="A developer’s guide to running Google’s 11.95B-parameter multimodal model with local STT/TTS on a 16 GB laptop under Apache 2.0."><link rel=canonical href="https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-private-offline-voice-assistant-with-gemma-4-12b-a-comp/"><meta property="og:type" content="article"><meta property="og:title" content="How to Build a Private Offline Voice Assistant with Gemma 4 12B: A Complete Local Setup Guide"><meta property="og:description" content="A developer’s guide to running Google’s 11.95B-parameter multimodal model with local STT/TTS on a 16 GB laptop under Apache 2.0."><style>:root{--ink:#1a1d24;--dim:#5a6473;--bg:#fbfaf8;--card:#fff;--line:#e7e4de;--accent:#b4622a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font:17px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+nav.bc{font-size:13px;color:var(--dim);margin-bottom:18px}nav.bc a{color:var(--dim);text-decoration:none}
+nav.bc a:hover{color:var(--accent)}
+h1{font-size:33px;line-height:1.2;margin:.2em 0 .3em}h2{font-size:23px;margin:1.6em 0 .5em}
+h3{font-size:18px;margin:1.3em 0 .4em}a{color:var(--accent)}
+.dek{color:var(--dim);font-size:18px;margin:0 0 18px}
+.tldr{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+border-radius:10px;padding:12px 16px;margin:0 0 26px;font-size:16px}
+pre{background:#15181e;color:#e6e9ef;border-radius:10px;padding:14px 16px;overflow:auto;font-size:14px;line-height:1.5}
+code{background:#eee9e2;padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre code{background:none;padding:0;font-size:13.5px}
+blockquote{border-left:3px solid var(--line);margin:0;padding:.2em 1em;color:var(--dim)}
+.updated{color:var(--dim);font-size:13px;margin-top:6px}
+.related{margin-top:48px;border-top:1px solid var(--line);padding-top:18px}
+.related h2{font-size:16px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+.related ul{padding-left:18px}.cta{margin-top:36px;background:var(--card);border:1px solid var(--line);
+border-radius:12px;padding:18px 20px}.cards{display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:var(--accent)}.card b{display:block;font-size:17px}.card span{color:var(--dim);font-size:14px}
+footer{margin-top:60px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:16px}</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Unfair HQ Guides", "url": "https://stickwithfiddle-sys.github.io/markloom-guides"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to Build a Private Offline Voice Assistant with Gemma 4 12B: A Complete Local Setup Guide", "description": "A developer’s guide to running Google’s 11.95B-parameter multimodal model with local STT/TTS on a 16 GB laptop under Apache 2.0.", "datePublished": "2026-06-17", "dateModified": "2026-06-17", "author": {"@type": "Organization", "name": "Unfair HQ Guides"}, "mainEntityOfPage": "https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-private-offline-voice-assistant-with-gemma-4-12b-a-comp/", "keywords": "gemma 4, local ai, voice assistant, offline llm, privacy"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Unfair HQ Guides", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/"}, {"@type": "ListItem", "position": 2, "name": "How to Build a Private Offline Voice Assistant with Gemma 4 ", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-private-offline-voice-assistant-with-gemma-4-12b-a-comp/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I send raw audio directly into Gemma 4 12B and skip STT?", "acceptedAnswer": {"@type": "Answer", "text": "The encoder-free architecture reads audio in a single pass, but most local assistant platforms and conversation agents still require separate speech components today. Until those frameworks natively stream raw audio to the model, you should keep a local STT layer in the pipeline."}}, {"@type": "Question", "name": "Will this run on a laptop with only 16 GB of shared RAM?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Google DeepMind specifies that Gemma 4 12B runs on a 16 GB laptop. At 4-bit quantization the weights occupy roughly 6.7 GB, leaving headroom for the OS and your STT/TTS services if you manage memory carefully."}}, {"@type": "Question", "name": "What happens if my voice command is longer than 30 seconds?", "acceptedAnswer": {"@type": "Answer", "text": "Gemma 4 12B has a hard 30-second audio limit. A common approach is to chunk long utterances or switch to a text-based prompt once you exceed that boundary."}}, {"@type": "Question", "name": "Do I need an internet connection after the initial setup?", "acceptedAnswer": {"@type": "Answer", "text": "No. The model is Apache 2.0 and open-weight, so after you download the quantized weights and install the local runtime, the entire voice assistant operates offline. No API keys or cloud endpoints are required."}}, {"@type": "Question", "name": "Is there any legal risk using this for a commercial product?", "acceptedAnswer": {"@type": "Answer", "text": "No. The weights ship under Apache 2.0 with no commercial restrictions, removing legal friction for on-device deployments."}}]}</script></head><body><div class=wrap>
+<nav class=bc><a href="https://stickwithfiddle-sys.github.io/markloom-guides/">Unfair HQ Guides</a> › How to Build a Private Offline Voice Assistant w</nav>
+<article><h1>How to Build a Private Offline Voice Assistant with Gemma 4 12B: A Complete Local Setup Guide</h1>
+<p class=dek>A developer’s guide to running Google’s 11.95B-parameter multimodal model with local STT/TTS on a 16 GB laptop under Apache 2.0.</p>
+<div class=tldr><strong>TL;DR:</strong> Download Gemma 4 12B (~6.7 GB at 4-bit) into a local runtime such as Google AI Edge Gallery, pair it with a local STT/TTS stack, and expose a local endpoint. The 11.95B-parameter model fits on a 16 GB laptop, runs offline under Apache 2.0, and keeps all voice data on-device.</div>
+<p><strong>TL;DR:</strong> Download Gemma 4 12B (~6.7 GB at 4-bit) into a local runtime such as Google AI Edge Gallery, pair it with a local STT/TTS stack, and expose a local endpoint. The 11.95B-parameter model fits on a 16 GB laptop, runs offline under Apache 2.0, and keeps all voice data on-device.</p>
+<h2>Check Hardware Constraints and the 30-Second Audio Limit</h2>
+<p>Before downloading the model, verify your machine has at least 16 GB of RAM and plan your voice pipeline around the model’s strict 30-second audio ceiling. At 4-bit quantization, Gemma 4 12B’s 11.95 billion parameters compress to roughly 6.7 GB. After loading the weights, the remaining ~9 GB must cover the operating system, the inference framework overhead, and any local audio capture or STT services. If you are running other local models or Home Assistant addons concurrently, budget even more conservatively.</p>
+<p>Check available memory before launching the stack:</p>
+<pre><code class="language-bash">free -h</code></pre>
+<p>Aim to have at least 14 GB free at idle; anything less risks swapping during inference.</p>
+<p>The model enforces a hard 30-second audio limit. Exceeding it will cause inference to fail or truncate, so your client must enforce a maximum recording duration. A common approach is to chunk incoming streams or fall back to text input for complex multi-part commands. Split existing recordings at the boundary with ffmpeg:</p>
+<pre><code class="language-bash">ffmpeg -i input.wav -f segment -segment_time 30 -c copy chunk_%03d.wav</code></pre>
+<p>This produces 30-second WAV files that stay within the limit. Feed each chunk separately, or switch to a text fallback when a user’s utterance exceeds one segment.</p>
+<h2>Install a Local Inference Runtime</h2>
+<p>To run Gemma 4 12B without external API calls, install a local inference runtime first. The Google AI Edge Gallery is one supported deployment option for both phones and laptops, and releases are delivered as standard OS-specific packages: a Windows .exe installer, a macOS zip bundle, and a Linux package.</p>
+<p>Because this runtime serves as the execution backend for your voice pipeline, completing the installation before downloading model weights avoids path and permission errors during setup.</p>
+<p>On macOS, download the zip archive, extract it, and drag the resulting application into your system Applications folder. Standard user permissions are sufficient for most local inference workloads when the app resides in the Applications directory. If you prefer the command line, a common approach is to locate the downloaded bundle and move it in one step:</p>
+<pre><code class="language-bash">cd ~/Downloads &amp;&amp; unzip *.zip &amp;&amp; mv *.app /Applications/</code></pre>
+<p>On Windows, launch the downloaded .exe installer and proceed through the setup prompts until the wizard finishes. A per-user install is usually adequate, with administrator elevation required only if you explicitly choose a system-wide program directory. You can also trigger the installer non-interactively once it is saved to your Downloads folder:</p>
+<pre><code class="language-powershell">$exe = Get-ChildItem &quot;$env:USERPROFILE\Downloads&quot; -Filter *.exe | Select-Object -First 1
+Start-Process -FilePath $exe.FullName -Wait</code></pre>
+<p>Linux users should install the provided package using the distribution’s native package manager; because formats vary by release, refer to the supplied readme for the exact dpkg, rpm, or AppImage command. After installation completes on any platform, open the runtime and verify that the local inference engine is active before pulling the Gemma 4 12B weights. Keeping this layer fully offline ensures voice data never leaves the device.</p>
+<h2>Load Gemma 4 12B at 4-Bit Quantization</h2>
+<p>Loading Gemma 4 12B at 4-bit quantization reduces its memory footprint to roughly 6.7 GB, letting the entire model stay resident in RAM on a 16 GB laptop. Select the 4-bit option in your local inference UI or configuration file immediately after importing the model weights.</p>
+<p>At 11.95 billion parameters, the full-precision weights would exceed typical consumer memory limits, but 4-bit compression brings private, on-device deployment within reach. In tools like Google AI Edge Gallery, select the 4-bit quantization profile during the model-import step. Because Gemma 4 is encoder-free and processes audio in a single pass, keeping the entire model in RAM is especially critical—any disk access during inference multiplies latency for multimodal inputs. After initialization, verify the process is locked in physical memory and not swapping before you attach speech-to-text or text-to-speech services; even occasional paging destroys the low latency required for conversational voice interaction. On Linux, confirm swap usage is zero with:</p>
+<pre><code class="language-bash">grep VmSwap /proc/$(pgrep -f gemma)/status</code></pre>
+<p>On macOS, monitor memory pressure while the model loads:</p>
+<pre><code class="language-bash">memory_pressure &amp;&amp; vm_stat 1</code></pre>
+<p>If you see swap growth or pressure warnings, reduce the context window or close other applications until the process stabilizes entirely in RAM. A fully resident model avoids the round-trip disk delay that would otherwise make real-time assistant responses unusable. Treat this verification as a mandatory gate: only after confirming stable, swap-free residency should you layer on the speech pipeline.</p>
+<h2>Wire Up Local STT and TTS Components</h2>
+<p>Because current local assistant frameworks still require separate speech and model components, you must bridge a local STT engine and a local TTS service to Gemma 4 12B; the STT text feeds into Gemma’s text context, and the generated reply routes to the TTS service, even though the model natively ingests audio in a single pass. Until front-end conversation agents expose that native audio path, a text pipeline is the only workable architecture, and it conveniently sidesteps Gemma’s hard 30-second audio limit. Splitting the pipeline this way also lets you upgrade either speech component independently of the quantized model.</p>
+<p>For the STT layer, a local ONNX/Parakeet model can deliver subsecond transcription latency. Load the ONNX graph and run inference on the captured waveform:</p>
+<pre><code class="language-python">import numpy as np, onnxruntime as ort
+session = ort.InferenceSession(&quot;parakeet.onnx&quot;)
+inputs = {session.get_inputs()[0].name: waveform}
+text = session.run(None, inputs)[0]</code></pre>
+<p>Pass the resulting transcript to your local Gemma endpoint. A common pattern is to POST the text to a local inference server and stream back the response:</p>
+<pre><code class="language-python">import requests, json
+r = requests.post(&quot;http://localhost:11434/api/generate&quot;,
+    json={&quot;model&quot;: &quot;gemma4:12b&quot;, &quot;prompt&quot;: text, &quot;stream&quot;: False})
+reply = r.json()[&quot;response&quot;]</code></pre>
+<p>Finally, send the reply to a local TTS service. A typical setup pushes the synthesized string to an on-device Piper or similar HTTP endpoint and writes the returned audio to your speaker queue:</p>
+<pre><code class="language-python">audio = requests.post(&quot;http://localhost:5000/tts&quot;,
+    json={&quot;text&quot;: reply}, stream=True)
+# playback(audio.content)</code></pre>
+<p>This keeps the full loop offline: the STT model runs locally, Gemma runs locally, and the TTS service runs locally.</p>
+<h2>Build the Voice Command Loop</h2>
+<p>Build the voice command loop by capturing microphone audio, sending it to a local STT service, forwarding the resulting transcript to your local Gemma 4 inference endpoint, and passing the generated reply to a local TTS engine for immediate playback. You must enforce the model’s hard 30-second audio cap by halting microphone capture before that limit; anything longer will exceed the model’s single-pass audio window and trigger truncation or rejection.</p>
+<p>A common approach is to record raw PCM audio with <code>sounddevice</code>, flush it to a 16 kHz mono WAV file, and POST it to a local Whisper-compatible STT server listening on port 9000. Once the STT returns the transcript, construct a concise prompt formatted as a direct action command in the style of the Voice Edit pattern—phrasing like “Restructure these notes into an executive summary” or “Translate this into Hindi”—and POST that payload to your local Gemma 4 inference endpoint running under Ollama or llama.cpp on localhost. Avoid conversational preamble; the model executes faster when the instruction is explicit and scoped to a single action.</p>
+<pre><code class="language-python">import sounddevice as sd, requests, wave
+frames = sd.rec(int(30 * 16000), samplerate=16000,
+                channels=1, dtype=&#x27;int16&#x27;)
+sd.wait()
+with wave.open(&quot;cmd.wav&quot;, &quot;wb&quot;) as f:
+    f.setnchannels(1); f.setsampwidth(2); f.setframerate(16000)
+    f.writeframes(frames.tobytes())</code></pre>
+<p>Submit the recorded file to the STT layer and retrieve the text:</p>
+<pre><code class="language-bash">curl -X POST http://localhost:9000/v1/audio/transcriptions \
+  -F file=&quot;@cmd.wav&quot; -F model=&quot;whisper-base&quot;</code></pre>
+<p>Forward the transcript to the local Gemma 4 API as an explicit agentic instruction:</p>
+<pre><code class="language-python">r = requests.post(&quot;http://localhost:11434/api/generate&quot;,
+    json={&quot;model&quot;: &quot;gemma4:12b&quot;,
+          &quot;prompt&quot;: f&quot;Restructure into an executive summary: {transcript}&quot;})
+reply = r.json()[&quot;response&quot;]</code></pre>
+<p>Finally, push the model’s text output to your local TTS service—such as Piper or Coqui—and play the synthesized audio stream through your default sound device. Keep the loop strictly sequential: record, transcribe, infer, speak, then return to listening so only one audio stream is active at any moment and the pipeline stays synchronized.</p>
+<h2>Keep the Stack Offline and Private</h2>
+<p>Keep the stack offline by binding the inference client to a local-only endpoint and dropping all outbound traffic for the process at the system firewall. Because Gemma 4 12B ships under Apache 2.0 with no commercial restrictions and inference runs entirely on-device, no audio or text ever leaves your machine, and all sensitive multimodal data remains on the hardware that owns it.</p>
+<p>At the client layer, disable remote base URLs and any automatic fallback to hosted APIs. A common approach is to initialize the SDK against a local inference server so every request stays on the loopback interface and never attempts an external resolver:</p>
+<pre><code class="language-python">from openai import OpenAI
+
+client = OpenAI(
+    base_url=&quot;http://127.0.0.1:11434/v1&quot;,
+    api_key=&quot;not-needed-local&quot;
+)</code></pre>
+<p>For a hard offline guarantee, add a firewall rule that denies the voice assistant process any outbound route:</p>
+<pre><code class="language-bash">sudo iptables -A OUTPUT -m owner --uid-owner assistant -j DROP</code></pre>
+<p>The 11.95 billion parameter weights compress to roughly 6.7 GB at 4-bit quantization, so the full audio-to-text pipeline executes in local RAM without cloud encoders or API dependencies. The hard 30-second audio limit also bounds each inference batch to what fits on-device. After starting the assistant, verify isolation by capturing packets during a voice query: if traffic leaves the loopback adapter, the stack is not truly offline.</p>
+<h2>FAQ</h2>
+<h3>Can I send raw audio directly into Gemma 4 12B and skip STT?</h3>
+<p>The encoder-free architecture reads audio in a single pass, but most local assistant platforms and conversation agents still require separate speech components today. Until those frameworks natively stream raw audio to the model, you should keep a local STT layer in the pipeline.</p>
+<h3>Will this run on a laptop with only 16 GB of shared RAM?</h3>
+<p>Yes. Google DeepMind specifies that Gemma 4 12B runs on a 16 GB laptop. At 4-bit quantization the weights occupy roughly 6.7 GB, leaving headroom for the OS and your STT/TTS services if you manage memory carefully.</p>
+<h3>What happens if my voice command is longer than 30 seconds?</h3>
+<p>Gemma 4 12B has a hard 30-second audio limit. A common approach is to chunk long utterances or switch to a text-based prompt once you exceed that boundary.</p>
+<h3>Do I need an internet connection after the initial setup?</h3>
+<p>No. The model is Apache 2.0 and open-weight, so after you download the quantized weights and install the local runtime, the entire voice assistant operates offline. No API keys or cloud endpoints are required.</p>
+<h3>Is there any legal risk using this for a commercial product?</h3>
+<p>No. The weights ship under Apache 2.0 with no commercial restrictions, removing legal friction for on-device deployments.</p>
+<h2>References for further reading</h2>
+<p>_Sources consulted while researching this guide, included so you can verify the details and go deeper. Listing them is not a claim that every line was independently fact-checked._</p>
+<ul><li><a href="https://lushbinary.com/blog/self-host-gemma-4-12b-local-deployment-guide" rel="noopener">Self-Hosting Gemma 4 12B: Local Deployment Guide</a></li><li><a href="https://www.youtube.com/watch?v=VhjshBCqwrQ&amp;vl=en" rel="noopener">I Built a Local AI Agent with Gemma 4 — Runs Fully Offline</a></li><li><a href="https://community.home-assistant.io/t/gemma-4-for-offline-ha-assistant/1007479" rel="noopener">Gemma 4 for Offline HA Assistant</a></li></ul>
+<hr>
+<p><em>I packaged the setup above into a ready-to-use kit — <strong>Gemma 4 12B Local Multimodal Build Kit (13 Items)</strong> — for anyone who'd rather copy-paste than wire it from scratch: <a href="https://unfairhq.gumroad.com/l/nkylsz?utm_source=devto&amp;utm_medium=article&amp;utm_campaign=gemma-4-12b-local-multimodal-build-kit-1" rel="noopener">https://unfairhq.gumroad.com/l/nkylsz</a>.</em></p>
+<p class=updated>Last updated: 2026-06-17</p></article>
+<footer>Unfair HQ Guides — practical, source-checked guides for builders.</footer>
+</div></body></html>
