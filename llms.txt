@@ -3,6 +3,7 @@
 > Practical, source-checked guides for developers and builders.
 
 ## Guides
+- [How do I build a solo SaaS support workflow? A triage-first operating procedure for automating draft replies and escalating critical issues](https://stickwithfiddle-sys.github.io/markloom-guides/how-do-i-build-a-solo-saas-support-workflow-a-triage-first-operating-p/): An actionable operating procedure for solo founders to route, draft, and escalate support tickets wi
 - [How to Build a Private Offline Voice Assistant with Gemma 4 12B: A Complete Local Setup Guide](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-private-offline-voice-assistant-with-gemma-4-12b-a-comp/): A developer’s guide to running Google’s 11.95B-parameter multimodal model with local STT/TTS on a 16
 - [How to Stop Context Rot in 1M-Token AI Coding Agents: A Practical Guide to Memory Budgeting and Session Discipline](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-stop-context-rot-in-1m-token-ai-coding-agents-a-practical-guide/): Massive context windows do not guarantee recall. Use compaction, hard session budgets, and ruthless 
 - [Claude Fable 5 Migration Guide: Rewriting Opus 4.8 CLAUDE.md Files and System Prompts for Goal-Reason-Boundary Structure](https://stickwithfiddle-sys.github.io/markloom-guides/claude-fable-5-migration-guide-rewriting-opus-4-8-claude-md-files-and-/): A concrete, step-by-step guide to migrating CLAUDE.md files and system prompts from Claude Opus 4.8 
