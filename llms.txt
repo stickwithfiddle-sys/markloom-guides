@@ -3,6 +3,8 @@
 > Practical, source-checked guides for developers and builders.
 
 ## Guides
+- [How to Build a Solo SaaS Support Workflow Using AI Triage, Draft Replies, and Escalation Guardrails](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-solo-saas-support-workflow-using-ai-triage-draft-replie/): A step-by-step guide to automating the majority of micro-SaaS support without losing the personal to
+- [How to comply with EU AI Act Article 50 for AI SaaS before August 2026](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-comply-with-eu-ai-act-article-50-for-ai-saas-before-august-2026/): A founder-engineer guide to provider and deployer transparency obligations, synthetic content labeli
 - [How to Build a Usage-Based Pricing Model for AI SaaS: Calculating Token COGS and Designing Margin-Safe Credit Tiers](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-usage-based-pricing-model-for-ai-saas-calculating-token/): An engineering guide to turning variable AI infrastructure costs into predictable, margin-safe custo
 - [How do I build a solo SaaS support workflow? A triage-first operating procedure for automating draft replies and escalating critical issues](https://stickwithfiddle-sys.github.io/markloom-guides/how-do-i-build-a-solo-saas-support-workflow-a-triage-first-operating-p/): An actionable operating procedure for solo founders to route, draft, and escalate support tickets wi
 - [How to Build a Private Offline Voice Assistant with Gemma 4 12B: A Complete Local Setup Guide](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-private-offline-voice-assistant-with-gemma-4-12b-a-comp/): A developer’s guide to running Google’s 11.95B-parameter multimodal model with local STT/TTS on a 16
