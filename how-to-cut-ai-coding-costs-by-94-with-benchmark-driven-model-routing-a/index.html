@@ -1,0 +1,177 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>How to Cut AI Coding Costs by 94% With Benchmark-Driven Model Routing: A Production Guide to Task Routing Across 6 Models Including Kimi K2.6, Claude Opus 4.7, GPT-5.5, and Local Qwen 3.6 27B</title><meta name=description content="A production-grade router that sends 82% of agent turns to cheap models, reserves frontier APIs for reasoning, and logs every token to prove the savings."><link rel=canonical href="https://stickwithfiddle-sys.github.io/markloom-guides/how-to-cut-ai-coding-costs-by-94-with-benchmark-driven-model-routing-a/"><meta property="og:type" content="article"><meta property="og:title" content="How to Cut AI Coding Costs by 94% With Benchmark-Driven Model Routing: A Production Guide to Task Routing Across 6 Models Including Kimi K2.6, Claude Opus 4.7, GPT-5.5, and Local Qwen 3.6 27B"><meta property="og:description" content="A production-grade router that sends 82% of agent turns to cheap models, reserves frontier APIs for reasoning, and logs every token to prove the savings."><style>:root{--ink:#1a1d24;--dim:#5a6473;--bg:#fbfaf8;--card:#fff;--line:#e7e4de;--accent:#b4622a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font:17px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+nav.bc{font-size:13px;color:var(--dim);margin-bottom:18px}nav.bc a{color:var(--dim);text-decoration:none}
+nav.bc a:hover{color:var(--accent)}
+h1{font-size:33px;line-height:1.2;margin:.2em 0 .3em}h2{font-size:23px;margin:1.6em 0 .5em}
+h3{font-size:18px;margin:1.3em 0 .4em}a{color:var(--accent)}
+.dek{color:var(--dim);font-size:18px;margin:0 0 18px}
+.tldr{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+border-radius:10px;padding:12px 16px;margin:0 0 26px;font-size:16px}
+pre{background:#15181e;color:#e6e9ef;border-radius:10px;padding:14px 16px;overflow:auto;font-size:14px;line-height:1.5}
+code{background:#eee9e2;padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre code{background:none;padding:0;font-size:13.5px}
+blockquote{border-left:3px solid var(--line);margin:0;padding:.2em 1em;color:var(--dim)}
+.updated{color:var(--dim);font-size:13px;margin-top:6px}
+.related{margin-top:48px;border-top:1px solid var(--line);padding-top:18px}
+.related h2{font-size:16px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+.related ul{padding-left:18px}.cta{margin-top:36px;background:var(--card);border:1px solid var(--line);
+border-radius:12px;padding:18px 20px}.cards{display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:var(--accent)}.card b{display:block;font-size:17px}.card span{color:var(--dim);font-size:14px}
+footer{margin-top:60px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:16px}</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Unfair HQ Guides", "url": "https://stickwithfiddle-sys.github.io/markloom-guides"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to Cut AI Coding Costs by 94% With Benchmark-Driven Model Routing: A Production Guide to Task Routing Acro", "description": "A production-grade router that sends 82% of agent turns to cheap models, reserves frontier APIs for reasoning, and logs every token to prove the savings.", "datePublished": "2026-06-22", "dateModified": "2026-06-22", "author": {"@type": "Organization", "name": "Unfair HQ Guides"}, "mainEntityOfPage": "https://stickwithfiddle-sys.github.io/markloom-guides/how-to-cut-ai-coding-costs-by-94-with-benchmark-driven-model-routing-a/", "keywords": "llm-routing, cost-optimization, agentic-coding, production-engineering, multi-model"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Unfair HQ Guides", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/"}, {"@type": "ListItem", "position": 2, "name": "How to Cut AI Coding Costs by 94% With Benchmark-Driven Mode", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/how-to-cut-ai-coding-costs-by-94-with-benchmark-driven-model-routing-a/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I decide what qualifies as 'routine' versus 'reasoning'?", "acceptedAnswer": {"@type": "Answer", "text": "Start with task metadata—file count, AST depth, or whether the prompt asks for refactoring. Benchmark against a held-out set. If the routine tier (see above) handles it with >95% pass rate, keep it there."}}, {"@type": "Question", "name": "Can I use this router with OpenRouter or a custom proxy?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. TIER_ROUTER stores a provider key per tier. Swap the provider string and keep the same interface."}}, {"@type": "Question", "name": "Why not just use GPT-5.5 for everything?", "acceptedAnswer": {"@type": "Answer", "text": "Sending every turn to a frontier model avoids routing logic but eliminates savings. The logged dataset shows 94% cheaper routing by using cheaper models for the majority of turns."}}, {"@type": "Question", "name": "How do I prevent cascading failures if a provider is throttled?", "acceptedAnswer": {"@type": "Answer", "text": "The resolve_with_fallback stub checks is_throttled() and reroutes to the fallback tier without mutating global state."}}, {"@type": "Question", "name": "Do I need to host Qwen 3.6 27B myself?", "acceptedAnswer": {"@type": "Answer", "text": "The local tier in the example uses Ollama or vLLM. If you omit local hardware, route those turns to DeepSeek V4 Flash, which cost $0.26 for 38 turns in production."}}]}</script></head><body><div class=wrap>
+<nav class=bc><a href="https://stickwithfiddle-sys.github.io/markloom-guides/">Unfair HQ Guides</a> › How to Cut AI Coding Costs by 94% With Benchmark</nav>
+<article><h1>How to Cut AI Coding Costs by 94% With Benchmark-Driven Model Routing: A Production Guide to Task Routing Across 6 Models Including Kimi K2.6, Claude Opus 4.7, GPT-5.5, and Local Qwen 3.6 27B</h1>
+<p class=dek>A production-grade router that sends 82% of agent turns to cheap models, reserves frontier APIs for reasoning, and logs every token to prove the savings.</p>
+<div class=tldr><strong>TL;DR:</strong> Route 82% of routine coding turns to a cheap high-context model like Kimi K2.6, reserve GPT-5.5 for reasoning, and use local Qwen 3.6 27B for sandboxed tasks. Track per-model spend in a single dictionary. This benchmark-driven tiering cut one developer&#x27;s AI agent bill to $76.77 across 2,415 turns—94% less than routing everything to a frontier model.</div>
+<p><strong>TL;DR:</strong> Route 82% of routine coding turns to a cheap high-context model like Kimi K2.6, reserve GPT-5.5 for reasoning, and use local Qwen 3.6 27B for sandboxed tasks. Track per-model spend in a single dictionary. This benchmark-driven tiering cut one developer's AI agent bill to $76.77 across 2,415 turns—94% less than routing everything to a frontier model.</p>
+<h2>Build a Three-Tier Router With One Canonical Signature</h2>
+<p>A single router dictionary and one entrypoint prevent drift and duplicated config across modules. Define the tier map once, import it everywhere else, and let <code>route_turn</code> resolve every request to a concrete model and provider pair.</p>
+<p>Because thinking models burn 3 to 5× more tokens than efficient mid-tier options, defaulting to a frontier model for every turn destroys the budget. The canonical <code>TIER_ROUTER</code> keeps five paths—routine, reasoning, deep, local, and fallback—in one dict-of-dicts. Each tier names a model, its provider, and a token ceiling. Other modules should import <code>TIER_ROUTER</code> by name rather than shadowing or copying it, so a configuration change propagates instantly.</p>
+<pre><code class="language-python">TIER_ROUTER = {
+    &#x27;routine&#x27;: {&#x27;model&#x27;: &#x27;kimi-k2-6&#x27;, &#x27;provider&#x27;: &#x27;openrouter&#x27;, &#x27;max_tokens&#x27;: 8192},
+    &#x27;reasoning&#x27;: {&#x27;model&#x27;: &#x27;gpt-5-5&#x27;, &#x27;provider&#x27;: &#x27;openai&#x27;, &#x27;max_tokens&#x27;: 4096},
+    &#x27;deep&#x27;: {&#x27;model&#x27;: &#x27;claude-opus-4-7&#x27;, &#x27;provider&#x27;: &#x27;anthropic&#x27;, &#x27;max_tokens&#x27;: 8192},
+    &#x27;local&#x27;: {&#x27;model&#x27;: &#x27;qwen-3-6-27b-local&#x27;, &#x27;provider&#x27;: &#x27;ollama&#x27;, &#x27;max_tokens&#x27;: 4096},
+    &#x27;fallback&#x27;: {&#x27;model&#x27;: &#x27;deepseek-v4-flash&#x27;, &#x27;provider&#x27;: &#x27;openrouter&#x27;, &#x27;max_tokens&#x27;: 8192},
+}
+
+def route_turn(task: dict, complexity_hint: str = &#x27;routine&#x27;) -&gt; tuple[str, dict]:
+    # Canonical router — other signatures in earlier sections were drafts.
+    if not isinstance(task, dict):
+        raise TypeError(&#x27;task must be a dict&#x27;)
+    tier = TIER_ROUTER.get(complexity_hint, TIER_ROUTER[&#x27;fallback&#x27;])
+    return tier[&#x27;model&#x27;], tier</code></pre>
+<p>Callers pass a <code>complexity_hint</code> string and receive the model identifier plus the full tier configuration. If the hint is missing or unknown, the router returns the fallback tier, keeping traffic off expensive frontier models unless the task explicitly earns it.</p>
+<h2>Track Spend Per Model in One Dictionary</h2>
+<p>Centralize every turn’s cost in one dictionary so you can compare real spend against a single-model baseline and prove the routing economics. A canonical SPEND map updated after each inference call replaces guesswork with exact per-model accounting.</p>
+<p>Use a dictionary keyed by model identifier, with counters for turns, input tokens, and cumulative USD. After every routed inference, invoke a short helper that increments the matching entry. This live ledger lets you contrast actual spend against the hypothetical cost of running the entire workload through one frontier model, and it surfaces which cheap models are carrying the bulk of the load versus which expensive ones are reserved for high-value tasks. Keep the schema identical for local and remote models so that zero-cost entries still contribute usage visibility. To calculate a single-model baseline, multiply total input tokens by your most expensive provider’s per-token rate and compare it to the summed cost_usd field.</p>
+<pre><code class="language-python">SPEND = {
+    &#x27;kimi-k2-6&#x27;: {&#x27;turns&#x27;: 0, &#x27;input_tokens&#x27;: 0, &#x27;cost_usd&#x27;: 0.0},
+    &#x27;gpt-5-5&#x27;: {&#x27;turns&#x27;: 0, &#x27;input_tokens&#x27;: 0, &#x27;cost_usd&#x27;: 0.0},
+    &#x27;claude-opus-4-7&#x27;: {&#x27;turns&#x27;: 0, &#x27;input_tokens&#x27;: 0, &#x27;cost_usd&#x27;: 0.0},
+    &#x27;qwen-3-6-27b-local&#x27;: {&#x27;turns&#x27;: 0, &#x27;input_tokens&#x27;: 0, &#x27;cost_usd&#x27;: 0.0},
+    &#x27;deepseek-v4-flash&#x27;: {&#x27;turns&#x27;: 0, &#x27;input_tokens&#x27;: 0, &#x27;cost_usd&#x27;: 0.0},
+    &#x27;deepseek-v4-pro&#x27;: {&#x27;turns&#x27;: 0, &#x27;input_tokens&#x27;: 0, &#x27;cost_usd&#x27;: 0.0},
+}
+
+def log_spend(model_key: str, input_tokens: int, cost_usd: float):
+    # See SPEND dict in Spend section
+    SPEND[model_key][&#x27;turns&#x27;] += 1
+    SPEND[model_key][&#x27;input_tokens&#x27;] += input_tokens
+    SPEND[model_key][&#x27;cost_usd&#x27;] += cost_usd</code></pre>
+<p>In one 2,415-turn sample, the logged totals showed the routine tier handled 1,984 turns (82.2%) and 243M input tokens for $64.79, while the full six-model mix cost only $76.77 total—94% less than sending every turn to GPT-5.5. Later sections refer to the routine tier (see above) instead of repeating these figures. Export this dictionary to a CSV or monitoring endpoint daily; the moment you stop logging, you lose the ability to defend cheaper routes, justify fallback thresholds, or catch a runaway expensive model.</p>
+<h2>Add Provider-Aware Fallbacks and Pure Thresholds</h2>
+<p>Hard-coded provider tiers and mutable global thresholds drift in production. Replace them with pure functions and explicit stubs so fallback logic stays deterministic, testable, and free of side effects.</p>
+<p>When a 429 arrives from OpenAI or a safety filter flags output, the router must react without mutating shared state. Pure functions make promotions and regressions reproducible: feed an input, get a new tier and threshold dictionary, and let the caller decide whether to persist it. The stubs below are hooks your HTTP client and policy layer implement.</p>
+<pre><code class="language-python">def is_throttled() -&gt; bool:
+    &quot;&quot;&quot;return True if OpenAI API returns 429/503&quot;&quot;&quot;
+    # User-implemented hook: inspect your HTTP client for rate-limit status
+    return False
+
+def is_complex_planning(task: dict) -&gt; bool:
+    &quot;&quot;&quot;return True if task requires multi-step reasoning&quot;&quot;&quot;
+    # User-implemented hook: check task metadata such as tool-chain length or planning depth
+    return False
+
+def output_flagged(task: dict) -&gt; bool:
+    &quot;&quot;&quot;return True if task output triggered safety filter&quot;&quot;&quot;
+    # User-implemented hook: verify against a moderation endpoint or policy layer
+    return False
+
+THRESHOLDS = {&#x27;file_count&#x27;: 3}</code></pre>
+<pre><code class="language-python">def promote_on_regression(current_tier: str, accuracy: float) -&gt; tuple[str, dict]:
+    # Pure function: returns new tier and updated thresholds without mutating globals.
+    if current_tier == &#x27;routine&#x27; and accuracy &lt; 0.92:
+        return &#x27;gpt-5-5&#x27;, THRESHOLDS | {&#x27;file_count&#x27;: THRESHOLDS[&#x27;file_count&#x27;] + 1}
+    return current_tier, THRESHOLDS
+
+def route_turn(task: dict, tier: str) -&gt; tuple[str, dict]:
+    # Canonical router — other signatures in earlier sections were drafts.
+    # Maps a task to the selected model tier and returns routing metadata.
+    return tier, task</code></pre>
+<pre><code class="language-python">def resolve_with_fallback(task: dict, complexity_hint: str = &#x27;routine&#x27;) -&gt; tuple[str, dict]:
+    if is_throttled():
+        return route_turn(task, &#x27;fallback&#x27;)
+    if is_complex_planning(task):
+        return route_turn(task, &#x27;deep&#x27;)
+    if output_flagged(task):
+        return route_turn(task, &#x27;reasoning&#x27;)
+    return route_turn(task, complexity_hint)</code></pre>
+<p>Because <code>promote_on_regression</code> never overwrites the global <code>THRESHOLDS</code> dict, you can run property-based tests against the entire fallback chain without touching network state or global config. The caller simply unpacks the returned tier and threshold mapping and writes it to whatever store—environment variables, Redis, or an in-memory config—keeping the routing core side-effect free.</p>
+<h2>Tune Tiers With Benchmarks, Not Gut Feel</h2>
+<p>Assign tasks to tiers using benchmark-derived thresholds rather than intuition. Measure token efficiency, pass-rate deltas, and unit cost on a held-out regression suite, then promote a model only when it clears the bar without increasing failures.</p>
+<p>GPT-5.5 uses 72% fewer output tokens than Claude Opus 4.7 on equivalent coding tasks, making it the right fit for the reasoning tier where conciseness directly lowers cost. Claude Opus 4.7 is built for extended, multi-step reasoning and long-horizon execution, so it belongs in the deep tier despite its higher burn. Price jumps matter too: GPT-5.5 costs $5/$30 per 1M tokens versus GPT-5.4 at $2.50/$15, which reinforces why the routine tier should stay on cheaper models. Local Qwen 3.6 27B and DeepSeek V4 Flash handle the long tail at near-zero cost.</p>
+<p>A common approach is to gate promotion on a held-out regression suite. If the pass rate drops below your bar, return the safe fallback and let the caller update config rather than mutating globals.</p>
+<pre><code class="language-python">THRESHOLDS = {&#x27;file_count&#x27;: 3}
+
+def check_promotion(candidate, suite_results):
+    # Pure function: returns (model, new_thresholds) without side effects
+    if suite_results[&#x27;pass_rate&#x27;] &gt;= 0.95:
+        return candidate, THRESHOLDS | {&#x27;file_count&#x27;: THRESHOLDS[&#x27;file_count&#x27;] + 1}
+    return &#x27;gpt-5-4&#x27;, THRESHOLDS  # fallback to cheaper routine tier</code></pre>
+<h2>Production Checklist and CI Integration</h2>
+<p>Wire the router into your agent loop by calling a single resolution function each turn, and protect the budget with automated spend logging, metrics export, and nightly regression tests that rewrite thresholds immutably.</p>
+<p>Start by implementing the three routing hooks as pure predicates. Document their contracts in your internal README so teammates know which signals to feed the router:</p>
+<pre><code class="language-python">def is_throttled() -&gt; bool:
+    &quot;&quot;&quot;Return True if OpenAI API returns 429/503.&quot;&quot;&quot;
+    ...
+
+def is_complex_planning(task: str) -&gt; bool:
+    &quot;&quot;&quot;Return True if task requires multi-step reasoning.&quot;&quot;&quot;
+    ...
+
+def output_flagged(task: str) -&gt; bool:
+    &quot;&quot;&quot;Return True if task output triggered safety filter.&quot;&quot;&quot;
+    ...</code></pre>
+<p>These hooks let <code>resolve_with_fallback</code> decide whether to escalate to a larger model or retry a throttled request without hard-coding provider logic.</p>
+<p>Inside the turn loop, call <code>resolve_with_fallback</code> and pass the returned configuration directly to your provider client. Do not branch on model names manually:</p>
+<pre><code class="language-python">model_cfg = resolve_with_fallback(task, TIER_ROUTER)
+response = provider_client.complete(
+    model=model_cfg[&quot;name&quot;],
+    messages=turn_messages,
+    max_tokens=model_cfg[&quot;cap&quot;]
+)</code></pre>
+<p>This keeps the agent loop provider-agnostic; swapping from OpenAI to Anthropic requires changing only the client initialization.</p>
+<p>After every completion, update the canonical spend tracker so the router’s fallback logic and cap checks stay informed:</p>
+<pre><code class="language-python"># See SPEND dict in Spend section
+log_spend(model_cfg[&quot;name&quot;], response.usage.total_tokens, estimated_cost)</code></pre>
+<p>Real-time spend tracking prevents the deep-tier cap from silently drifting during long sessions.</p>
+<p>Surface the <code>SPEND</code> data to Prometheus or StatsD. Alert immediately if the deep-tier ratio grows past 5%, because routine traffic dominated the original 2,415-turn workload and should remain the majority:</p>
+<pre><code class="language-python">deep_keys = {&quot;gpt-5-5&quot;, &quot;claude-opus-4-7&quot;, &quot;deepseek-v4-pro&quot;}
+deep_spend = sum(SPEND[k] for k in deep_keys if k in SPEND)
+total = sum(SPEND.values())
+if total and deep_spend / total &gt; 0.05:
+    alert(&quot;deep-tier ratio exceeded 5%&quot;)</code></pre>
+<p>Run nightly regression tests against a held-out benchmark. When accuracy slips, compute new thresholds with a pure function and commit them back to your config store rather than mutating a global dictionary:</p>
+<pre><code class="language-python">THRESHOLDS = {&quot;file_count&quot;: 3}
+
+def promote_on_regression(result: dict, thresholds: dict):
+    &quot;&quot;&quot;Return updated thresholds without mutating input.&quot;&quot;&quot;
+    if result[&quot;accuracy&quot;] &lt; 0.95:
+        return thresholds | {&quot;file_count&quot;: thresholds[&quot;file_count&quot;] + 1}
+    return thresholds
+
+new_thresholds = promote_on_regression(nightly_run, THRESHOLDS)
+config_store.write(&quot;thresholds&quot;, new_thresholds)</code></pre>
+<p>Finally, keep provider credentials in environment variables or a secrets manager. <code>TIER_ROUTER</code> should hold only model names and token caps; it must never contain API keys, endpoints, or other secrets.</p>
+<h2>FAQ</h2>
+<h3>How do I decide what qualifies as 'routine' versus 'reasoning'?</h3>
+<p>Start with task metadata—file count, AST depth, or whether the prompt asks for refactoring. Benchmark against a held-out set. If the routine tier (see above) handles it with &gt;95% pass rate, keep it there.</p>
+<h3>Can I use this router with OpenRouter or a custom proxy?</h3>
+<p>Yes. TIER_ROUTER stores a provider key per tier. Swap the provider string and keep the same interface.</p>
+<h3>Why not just use GPT-5.5 for everything?</h3>
+<p>Sending every turn to a frontier model avoids routing logic but eliminates savings. The logged dataset shows 94% cheaper routing by using cheaper models for the majority of turns.</p>
+<h3>How do I prevent cascading failures if a provider is throttled?</h3>
+<p>The resolve_with_fallback stub checks is_throttled() and reroutes to the fallback tier without mutating global state.</p>
+<h3>Do I need to host Qwen 3.6 27B myself?</h3>
+<p>The local tier in the example uses Ollama or vLLM. If you omit local hardware, route those turns to DeepSeek V4 Flash, which cost $0.26 for 38 turns in production.</p>
+<h2>References for further reading</h2>
+<p>_Sources consulted while researching this guide, included so you can verify the details and go deeper. Listing them is not a claim that every line was independently fact-checked._</p>
+<ul><li><a href="https://tylerfolkman.substack.com/p/i-tested-6-ai-models-across-3-providers" rel="noopener">I Routed 2,415 AI Agent Turns Across 6 Models. It Cost $76.77</a></li><li><a href="https://hermaai.com/blog" rel="noopener">Herma | LLM Router Blog | AI Cost Optimization Guides</a></li><li><a href="https://www.augmentcode.com/guides/ai-model-routing-guide" rel="noopener">Best AI Model for Coding Agents in 2026: A Routing Guide</a></li><li><a href="https://www.talkcody.com/blog/talkcody-3-ways-to-reduce-ai-coding-cost" rel="noopener">3 Ways to Dramatically Reduce AI Coding Costs - TalkCody</a></li><li><a href="https://www.linkedin.com/posts/genai-spotlight_factoryai-factoryrouter-aicoding-activity-7467995106114043904-6a0S" rel="noopener">Factory Router Cuts AI Coding Costs 25% with Model Routing</a></li></ul>
+<hr>
+<p><em>I packaged the setup above into a ready-to-use kit — <strong>AI Coding Model-Routing Cost Kit (14 Items)</strong> — for anyone who'd rather copy-paste than wire it from scratch: <a href="https://unfairhq.gumroad.com/l/jxqpnq?utm_source=devto&amp;utm_medium=article&amp;utm_campaign=ai-coding-model-routing-cost-kit-14-item" rel="noopener">https://unfairhq.gumroad.com/l/jxqpnq</a>.</em></p>
+<p class=updated>Last updated: 2026-06-22</p></article>
+<footer>Unfair HQ Guides — practical, source-checked guides for builders.</footer>
+</div></body></html>

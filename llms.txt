@@ -3,6 +3,7 @@
 > Practical, source-checked guides for developers and builders.
 
 ## Guides
+- [How to Cut AI Coding Costs by 94% With Benchmark-Driven Model Routing: A Production Guide to Task Routing Across 6 Models Including Kimi K2.6, Claude Opus 4.7, GPT-5.5, and Local Qwen 3.6 27B](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-cut-ai-coding-costs-by-94-with-benchmark-driven-model-routing-a/): A production-grade router that sends 82% of agent turns to cheap models, reserves frontier APIs for 
 - [How to Move Claude Code Sessions From Local Terminal Tests to Reliable Scheduled Cron Jobs](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-move-claude-code-sessions-from-local-terminal-tests-to-reliable/): Turn your interactive Claude Code CLI workflows into production-grade cron jobs that log, timeout, a
 - [How to Build a Solo SaaS Support Workflow Using AI Triage, Draft Replies, and Escalation Guardrails](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-solo-saas-support-workflow-using-ai-triage-draft-replie/): A step-by-step guide to automating the majority of micro-SaaS support without losing the personal to
 - [How to comply with EU AI Act Article 50 for AI SaaS before August 2026](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-comply-with-eu-ai-act-article-50-for-ai-saas-before-august-2026/): A founder-engineer guide to provider and deployer transparency obligations, synthetic content labeli
