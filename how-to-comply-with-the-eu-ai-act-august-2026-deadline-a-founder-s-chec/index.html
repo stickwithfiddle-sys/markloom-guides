@@ -1,0 +1,156 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>How to comply with the EU AI Act August 2026 deadline: a founder’s checklist for risk classification, Annex IV documentation, and Article 50 transparency</title><meta name=description content="A practical, step-by-step compliance checklist for startup founders and CTOs preparing for the EU AI Act&#x27;s 2 August 2026 enforcement wave."><link rel=canonical href="https://stickwithfiddle-sys.github.io/markloom-guides/how-to-comply-with-the-eu-ai-act-august-2026-deadline-a-founder-s-chec/"><meta property="og:type" content="article"><meta property="og:title" content="How to comply with the EU AI Act August 2026 deadline: a founder’s checklist for risk classification, Annex IV documentation, and Article 50 transparency"><meta property="og:description" content="A practical, step-by-step compliance checklist for startup founders and CTOs preparing for the EU AI Act&#x27;s 2 August 2026 enforcement wave."><style>:root{--ink:#1a1d24;--dim:#5a6473;--bg:#fbfaf8;--card:#fff;--line:#e7e4de;--accent:#b4622a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font:17px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+nav.bc{font-size:13px;color:var(--dim);margin-bottom:18px}nav.bc a{color:var(--dim);text-decoration:none}
+nav.bc a:hover{color:var(--accent)}
+h1{font-size:33px;line-height:1.2;margin:.2em 0 .3em}h2{font-size:23px;margin:1.6em 0 .5em}
+h3{font-size:18px;margin:1.3em 0 .4em}a{color:var(--accent)}
+.dek{color:var(--dim);font-size:18px;margin:0 0 18px}
+.tldr{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+border-radius:10px;padding:12px 16px;margin:0 0 26px;font-size:16px}
+pre{background:#15181e;color:#e6e9ef;border-radius:10px;padding:14px 16px;overflow:auto;font-size:14px;line-height:1.5}
+code{background:#eee9e2;padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre code{background:none;padding:0;font-size:13.5px}
+blockquote{border-left:3px solid var(--line);margin:0;padding:.2em 1em;color:var(--dim)}
+.updated{color:var(--dim);font-size:13px;margin-top:6px}
+.related{margin-top:48px;border-top:1px solid var(--line);padding-top:18px}
+.related h2{font-size:16px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+.related ul{padding-left:18px}.cta{margin-top:36px;background:var(--card);border:1px solid var(--line);
+border-radius:12px;padding:18px 20px}.cards{display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:var(--accent)}.card b{display:block;font-size:17px}.card span{color:var(--dim);font-size:14px}
+footer{margin-top:60px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:16px}</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Unfair HQ Guides", "url": "https://stickwithfiddle-sys.github.io/markloom-guides"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to comply with the EU AI Act August 2026 deadline: a founder’s checklist for risk classification, Annex IV", "description": "A practical, step-by-step compliance checklist for startup founders and CTOs preparing for the EU AI Act's 2 August 2026 enforcement wave.", "datePublished": "2026-06-27", "dateModified": "2026-06-27", "author": {"@type": "Organization", "name": "Unfair HQ Guides"}, "mainEntityOfPage": "https://stickwithfiddle-sys.github.io/markloom-guides/how-to-comply-with-the-eu-ai-act-august-2026-deadline-a-founder-s-chec/", "keywords": "EU AI Act, compliance, high-risk AI, transparency, founders, August 2026"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Unfair HQ Guides", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/"}, {"@type": "ListItem", "position": 2, "name": "How to comply with the EU AI Act August 2026 deadline: a fou", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/how-to-comply-with-the-eu-ai-act-august-2026-deadline-a-founder-s-chec/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the exact compliance deadline for high-risk AI systems?", "acceptedAnswer": {"@type": "Answer", "text": "Providers and deployers of high-risk AI systems must meet obligations from 2 August 2026."}}, {"@type": "Question", "name": "What are the penalties for missing the deadline?", "acceptedAnswer": {"@type": "Answer", "text": "Non-compliance can trigger fines of up to EUR 15 million or 3% of global annual turnover."}}, {"@type": "Question", "name": "Do transparency rules start on the same date?", "acceptedAnswer": {"@type": "Answer", "text": "Transparency obligations take effect on 2 August 2026, except for provider watermarking obligations, which have been postponed until 2 December."}}, {"@type": "Question", "name": "Which teams need training?", "acceptedAnswer": {"@type": "Answer", "text": "Board members need strategic oversight, operational staff need usage and human oversight guidelines, risk and compliance personnel need classification methodology, and technical teams need data governance and model validation training."}}, {"@type": "Question", "name": "Why does risk classification matter so much?", "acceptedAnswer": {"@type": "Answer", "text": "It determines the entire compliance burden and dictates which documentation, assessment, and oversight rules apply to a given system."}}]}</script></head><body><div class=wrap>
+<nav class=bc><a href="https://stickwithfiddle-sys.github.io/markloom-guides/">Unfair HQ Guides</a> › How to comply with the EU AI Act August 2026 dea</nav>
+<article><h1>How to comply with the EU AI Act August 2026 deadline: a founder’s checklist for risk classification, Annex IV documentation, and Article 50 transparency</h1>
+<p class=dek>A practical, step-by-step compliance checklist for startup founders and CTOs preparing for the EU AI Act&#x27;s 2 August 2026 enforcement wave.</p>
+<div class=tldr><strong>TL;DR:</strong> By 2 August 2026, founders must inventory and classify all AI systems, complete technical documentation and conformity assessments for high-risk systems, and implement transparency disclosures. Fines reach EUR 15 million or 3% of global turnover, so start gap analysis, assign oversight roles, and train teams now.</div>
+<p><strong>TL;DR:</strong> By 2 August 2026, founders must inventory and classify all AI systems, complete technical documentation and conformity assessments for high-risk systems, and implement transparency disclosures. Fines reach EUR 15 million or 3% of global turnover, so start gap analysis, assign oversight roles, and train teams now.</p>
+<h2>Build an AI Inventory and Classify Risk Levels</h2>
+<p>Map every AI system your organization develops or deploys into a centralized inventory and assign it one of the Act's four risk tiers; this classification alone determines whether the August 2026 high-risk obligations are triggered and what documentation and oversight rules apply.</p>
+<p>The EU AI Act recognizes four risk levels—prohibited, high-risk, limited risk, and minimal risk—and your compliance burden scales directly with the highest tier present in your stack. For each system, record its purpose, underlying model, deployment context, and whether you act as provider or deployer, then evaluate it against Annex III to determine whether it qualifies as high-risk. Only systems classified as high-risk must meet the full conformity assessment, technical documentation, and human oversight requirements by the August 2026 deadline. If you integrate a third-party API, log it as a distinct entry and mark your role as deployer, because the August 2026 obligations apply differently to providers and deployers. Maintain this registry in a machine-readable format so you can automatically flag in-scope systems and track changes as models or use cases evolve. A common approach is to export existing AI service metadata from your cloud provider or model gateway into this schema, then version-control the file alongside your infrastructure code.</p>
+<pre><code class="language-yaml">ai_inventory:
+  - system_id: cv-001
+    name: Resume Screener
+    purpose: Employment candidate ranking
+    risk_class: high-risk
+    annex_iii_domain: employment
+    role: provider
+    go_live_date: &quot;2025-03-01&quot;
+  - system_id: chat-002
+    name: Customer Support Bot
+    purpose: FAQ automation
+    risk_class: limited-risk
+    annex_iii_domain: null
+    role: deployer
+    go_live_date: &quot;2024-11-15&quot;</code></pre>
+<pre><code class="language-python">import yaml
+
+with open(&quot;ai_inventory.yaml&quot;) as f:
+    data = yaml.safe_load(f)
+
+high_risk = [s for s in data[&quot;ai_inventory&quot;] if s[&quot;risk_class&quot;] == &quot;high-risk&quot;]
+print(f&quot;High-risk systems triggering Aug 2026 obligations: {len(high_risk)}&quot;)
+for s in high_risk:
+    print(f&quot; - {s[&#x27;system_id&#x27;]}: {s[&#x27;name&#x27;]} ({s[&#x27;annex_iii_domain&#x27;]})&quot;)</code></pre>
+<h2>Prepare Technical Documentation and Conformity Evidence (Annex IV Scope)</h2>
+<p>For every high-risk AI system, compile the technical documentation and evidence required for conformity assessment and ongoing monitoring before deployment, and assign risk and compliance personnel to own the documentation requirements while technical teams validate data governance and model performance.</p>
+<p>Risk and compliance personnel must maintain this dossier as a living record that supports both initial conformity assessment and ongoing post-market monitoring. Technical teams generate the underlying evidence; a common approach is to version datasets, log training configurations, and capture evaluation benchmarks that demonstrate model performance and data governance.</p>
+<p>Track documentation completeness with a structured inventory that maps each required deliverable to its evidence location, owner, and review status:</p>
+<pre><code class="language-json">{
+  &quot;system_id&quot;: &quot;hr-recruitment-v2&quot;,
+  &quot;documentation_scope&quot;: {
+    &quot;technical_file&quot;: { &quot;status&quot;: &quot;completed&quot;, &quot;owner&quot;: &quot;compliance&quot;, &quot;evidence_url&quot;: &quot;docs/technical.md&quot; },
+    &quot;conformity_evidence&quot;: { &quot;status&quot;: &quot;completed&quot;, &quot;owner&quot;: &quot;compliance&quot;, &quot;evidence_url&quot;: &quot;docs/conformity/&quot; },
+    &quot;monitoring_logs&quot;: { &quot;status&quot;: &quot;in_review&quot;, &quot;owner&quot;: &quot;ml-ops&quot;, &quot;evidence_url&quot;: &quot;logs/monitoring/&quot; }
+  },
+  &quot;conformity_status&quot;: &quot;pending&quot;,
+  &quot;last_updated&quot;: &quot;2025-11-15&quot;
+}</code></pre>
+<p>Validate data governance and model performance with automated checks before each release. A common approach is to assert that model accuracy meets the predefined threshold declared in the technical file:</p>
+<pre><code class="language-python">from sklearn.metrics import accuracy_score
+
+def validate_model_performance(y_true, y_pred, min_accuracy):
+    acc = accuracy_score(y_true, y_pred)
+    assert acc &gt;= min_accuracy, f&quot;Accuracy {acc:.3f} below threshold&quot;
+    return {&quot;metric&quot;: &quot;accuracy&quot;, &quot;value&quot;: round(acc, 4), &quot;pass&quot;: True}</code></pre>
+<p>Store all artifacts in a version-controlled repository with immutable release tags. Tag the dataset version, model binary, and evaluation logs together so auditors can trace every data governance decision and model performance result back to the technical documentation.</p>
+<h2>Implement Transparency and Disclosure Mechanisms (Article 50)</h2>
+<p>By 2 August 2026, deployers must ensure users know they are interacting with an AI system, and providers must label AI-generated content in line with the Code of Practice. Watermarking obligations for synthetic content are deferred to 2 December, so immediate work should focus on UI disclosures and metadata labels.</p>
+<p>Add a persistent banner at the start of every AI-powered interaction:</p>
+<pre><code class="language-html">&lt;div class=&quot;ai-notice&quot; role=&quot;status&quot;&gt;
+  &lt;p&gt;You are chatting with an AI assistant.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+<p>For API-delivered synthetic media, include a machine-readable disclosure in the response payload:</p>
+<pre><code class="language-json">{
+  &quot;content_url&quot;: &quot;https://cdn.example.com/image.png&quot;,
+  &quot;ai_generated&quot;: true,
+  &quot;transparency_label&quot;: &quot;ai-generated&quot;
+}</code></pre>
+<p>Store this metadata in the file header so labels survive downloads. A common approach is to write PNG text chunks before serving assets:</p>
+<pre><code class="language-python">from PIL import Image
+from PIL.PngImagePlugin import PngInfo
+
+meta = PngInfo()
+meta.add_text(&quot;ai-generated&quot;, &quot;true&quot;)
+meta.add_text(&quot;compliance&quot;, &quot;Code of Practice&quot;)
+image.save(&quot;asset.png&quot;, pnginfo=meta)</code></pre>
+<p>Review every user-facing surface—chat interfaces, image generators, and video tools—to verify disclosures are clear, conspicuous, and displayed before the first interaction. Map each output type to a labeling method: HTML banners for conversational UIs, JSON fields for API consumers, and embedded metadata for downloadable files. Document the placement and wording of each notice in your technical file so auditors can trace compliance back to Article 50. Since provider watermarking rules do not apply until 2 December, prioritize these human-readable and machine-readable labels now to meet the August deadline.</p>
+<h2>Assign Governance, Human Oversight, and Team Training</h2>
+<p>Assign a single accountable owner—typically a Chief AI Ethics Officer or equivalent—to maintain the AI systems inventory, risk classification register, and human-oversight protocols. Every role, from the board to engineering, must receive tailored training mapped to the Act’s obligations before August 2026.</p>
+<p>Board members require strategic governance education so they can scrutinize high-risk exposure, approve remediation budgets, and question conformity gaps during quarterly reviews. Operational staff need step-by-step human oversight playbooks that define when and how to override, escalate, or shut down an AI system in real time. Risk and compliance teams must master the classification methodology to accurately categorize systems under the Act’s risk framework and defend those decisions to regulators. Technical teams need hands-on training in data governance, model validation, and bias mitigation, not just theoretical awareness.</p>
+<p>Codify these responsibilities and training modules in version-controlled configuration so you can audit readiness programmatically:</p>
+<pre><code class="language-yaml">ai_governance_roles:
+  board:
+    training: [&quot;strategic_oversight&quot;, &quot;risk_appetite&quot;]
+    owner: &quot;Chief AI Ethics Officer&quot;
+  operational_staff:
+    training: [&quot;human_oversight_procedures&quot;, &quot;override_protocols&quot;]
+    revalidation: &quot;annual&quot;
+  risk_compliance:
+    training: [&quot;classification_methodology&quot;, &quot;annex_iv_documentation&quot;]
+  technical_teams:
+    training: [&quot;data_governance&quot;, &quot;model_validation&quot;, &quot;bias_mitigation&quot;]</code></pre>
+<p>Track completion with a simple CLI check against this manifest before any high-risk system deploys to production. Tie the same role definitions to your identity provider so that unaudited users cannot trigger model inference in high-risk workflows. A common approach is to refresh all training annually and revalidate classification decisions whenever the model or use case changes.</p>
+<h2>Run a Pre-August Conformity Gap Analysis</h2>
+<p>Start your conformity gap analysis now by mapping every AI system against the Act’s high-risk obligations and identifying missing Annex IV documentation, transparency disclosures, and human-oversight controls before the 2 August 2026 deadline. Providers and deployers that fail to meet high-risk obligations face fines of up to EUR 15 million or 3% of global annual turnover, so treat readiness as a technical delivery milestone, not a legal review.</p>
+<p>Build an inventory of every model in production and check it against the required documentation set. A minimal automated scan can surface gaps in seconds. Run a script from your repository root to verify that each high-risk system has the mandatory files:</p>
+<pre><code class="language-python">from pathlib import Path
+
+REQUIRED = [
+    &quot;risk_management_system.md&quot;,
+    &quot;data_governance_log.md&quot;,
+    &quot;technical_documentation.md&quot;,
+    &quot;human_oversight_protocol.md&quot;,
+    &quot;transparency_notice.md&quot;
+]
+
+def audit_docs(base: Path):
+    missing = [f for f in REQUIRED if not (base / f).exists()]
+    if missing:
+        print(f&quot;GAP: Missing {len(missing)} Annex IV / oversight files&quot;)
+    return missing</code></pre>
+<p>Next, verify that your transparency layer already returns the disclosures required by Article 50. Test your API or web output for the presence of an AI-generated flag before the August cutoff:</p>
+<pre><code class="language-bash">curl -s https://api.yourservice.eu/v1/generate \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#x27;{&quot;prompt&quot;:&quot;test&quot;}&#x27; | jq -e &#x27;.metadata.ai_generated_flag&#x27;</code></pre>
+<p>If either scan fails, assign owners, ticket the items, and sprint the fixes. Repeat the audit weekly until all gates pass. Use a technical readiness approach to close gaps in documentation, transparency, and oversight before 2 August 2026.</p>
+<h2>FAQ</h2>
+<h3>What is the exact compliance deadline for high-risk AI systems?</h3>
+<p>Providers and deployers of high-risk AI systems must meet obligations from 2 August 2026.</p>
+<h3>What are the penalties for missing the deadline?</h3>
+<p>Non-compliance can trigger fines of up to EUR 15 million or 3% of global annual turnover.</p>
+<h3>Do transparency rules start on the same date?</h3>
+<p>Transparency obligations take effect on 2 August 2026, except for provider watermarking obligations, which have been postponed until 2 December.</p>
+<h3>Which teams need training?</h3>
+<p>Board members need strategic oversight, operational staff need usage and human oversight guidelines, risk and compliance personnel need classification methodology, and technical teams need data governance and model validation training.</p>
+<h3>Why does risk classification matter so much?</h3>
+<p>It determines the entire compliance burden and dictates which documentation, assessment, and oversight rules apply to a given system.</p>
+<h2>References for further reading</h2>
+<p>_Sources consulted while researching this guide, included so you can verify the details and go deeper. Listing them is not a claim that every line was independently fact-checked._</p>
+<ul><li><a href="https://witness.ai/blog/eu-ai-act-compliance-checklist-2026" rel="noopener">EU AI Act Compliance Checklist: 2026 Update</a></li><li><a href="https://fontvera.eu/intelligence/eu-ai-act-august-2026-deadline-requirements" rel="noopener">EU AI Act August 2026 Deadline: Complete Requirements Checklist for Compliance | Fontvera</a></li><li><a href="https://www.legalnodes.com/article/eu-ai-act-2026-updates-compliance-requirements-and-business-risks" rel="noopener">EU AI Act 2026 Updates: Compliance Requirements and Business Risks</a></li><li><a href="https://www.augmentcode.com/guides/eu-ai-act-2026" rel="noopener">The 2026 EU AI Act and AI-Generated Code: What Changes for Dev ...</a></li><li><a href="https://artificialintelligenceact.eu/article/50" rel="noopener">Article 50: Transparency Obligations for Providers and Deployers of ...</a></li></ul>
+<hr>
+<p><em>I packaged the setup above into a ready-to-use kit — <strong>EU AI Act Aug-2 Founder Compliance Kit</strong> — for anyone who'd rather copy-paste than wire it from scratch: <a href="https://unfairhq.gumroad.com/l/bgwcss?utm_source=devto&amp;utm_medium=article&amp;utm_campaign=eu-ai-act-aug-2-founder-compliance-kit" rel="noopener">https://unfairhq.gumroad.com/l/bgwcss</a>.</em></p>
+<p class=updated>Last updated: 2026-06-27</p></article>
+<footer>Unfair HQ Guides — practical, source-checked guides for builders.</footer>
+</div></body></html>
