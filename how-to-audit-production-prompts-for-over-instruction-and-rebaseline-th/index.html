@@ -1,0 +1,169 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>How to audit production prompts for over-instruction and rebaseline them for GPT-5.5</title><meta name=description content="A developer&#x27;s guide to cleaning up legacy prompt libraries for GPT-5.5 Instant without breaking reasoning-mode workflows."><link rel=canonical href="https://stickwithfiddle-sys.github.io/markloom-guides/how-to-audit-production-prompts-for-over-instruction-and-rebaseline-th/"><meta property="og:type" content="article"><meta property="og:title" content="How to audit production prompts for over-instruction and rebaseline them for GPT-5.5"><meta property="og:description" content="A developer&#x27;s guide to cleaning up legacy prompt libraries for GPT-5.5 Instant without breaking reasoning-mode workflows."><style>:root{--ink:#1a1d24;--dim:#5a6473;--bg:#fbfaf8;--card:#fff;--line:#e7e4de;--accent:#b4622a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font:17px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+nav.bc{font-size:13px;color:var(--dim);margin-bottom:18px}nav.bc a{color:var(--dim);text-decoration:none}
+nav.bc a:hover{color:var(--accent)}
+h1{font-size:33px;line-height:1.2;margin:.2em 0 .3em}h2{font-size:23px;margin:1.6em 0 .5em}
+h3{font-size:18px;margin:1.3em 0 .4em}a{color:var(--accent)}
+.dek{color:var(--dim);font-size:18px;margin:0 0 18px}
+.tldr{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+border-radius:10px;padding:12px 16px;margin:0 0 26px;font-size:16px}
+pre{background:#15181e;color:#e6e9ef;border-radius:10px;padding:14px 16px;overflow:auto;font-size:14px;line-height:1.5}
+code{background:#eee9e2;padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre code{background:none;padding:0;font-size:13.5px}
+blockquote{border-left:3px solid var(--line);margin:0;padding:.2em 1em;color:var(--dim)}
+.updated{color:var(--dim);font-size:13px;margin-top:6px}
+.related{margin-top:48px;border-top:1px solid var(--line);padding-top:18px}
+.related h2{font-size:16px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+.related ul{padding-left:18px}.cta{margin-top:36px;background:var(--card);border:1px solid var(--line);
+border-radius:12px;padding:18px 20px}.cards{display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:var(--accent)}.card b{display:block;font-size:17px}.card span{color:var(--dim);font-size:14px}
+footer{margin-top:60px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:16px}</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Unfair HQ Guides", "url": "https://stickwithfiddle-sys.github.io/markloom-guides"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to audit production prompts for over-instruction and rebaseline them for GPT-5.5", "description": "A developer's guide to cleaning up legacy prompt libraries for GPT-5.5 Instant without breaking reasoning-mode workflows.", "datePublished": "2026-06-29", "dateModified": "2026-06-29", "author": {"@type": "Organization", "name": "Unfair HQ Guides"}, "mainEntityOfPage": "https://stickwithfiddle-sys.github.io/markloom-guides/how-to-audit-production-prompts-for-over-instruction-and-rebaseline-th/", "keywords": "gpt-5.5, prompt engineering, production audit, llm ops, prompt governance"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Unfair HQ Guides", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/"}, {"@type": "ListItem", "position": 2, "name": "How to audit production prompts for over-instruction and reb", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/how-to-audit-production-prompts-for-over-instruction-and-rebaseline-th/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does outcome-first prompting apply to GPT-5.5 reasoning mode?", "acceptedAnswer": {"@type": "Answer", "text": "No. Reasoning mode often benefits from explicit step-by-step prompts, so keep sequential scaffolding there. The rebaselining guidance here targets Instant and standard completions."}}, {"@type": "Question", "name": "How do I handle prompts for legal or financial workflows?", "acceptedAnswer": {"@type": "Answer", "text": "You can still use outcome-first instructions, but do not rely solely on the model to choose the path. A common approach is to add deterministic guardrails, output schemas, or human review steps outside the prompt text."}}, {"@type": "Question", "name": "Should I delete my old step-by-step prompts immediately?", "acceptedAnswer": {"@type": "Answer", "text": "Archive them with a deprecation date and keep them runnable behind a feature flag until the rebaselined prompts pass production traffic validation. This gives you a rollback path if integration tests fail."}}, {"@type": "Question", "name": "Why does GPT-5.5 Instant degrade on sequential instructions?", "acceptedAnswer": {"@type": "Answer", "text": "OpenAI's developer documentation indicates that detailed sequential instructions can actively degrade results with this model. The model performs better when you define the outcome and let it select an efficient solution path."}}, {"@type": "Question", "name": "What if my rebaselined prompt fails the A/B test?", "acceptedAnswer": {"@type": "Answer", "text": "Treat the failure as signal that the specific task still needs explicit constraints, not necessarily full step-by-step sequencing. Iterate by tightening the outcome definition or adding constraints without prescribing execution order. --- *I packaged the setup above into a ready-to-use kit — **GPT-5.5 Prompt Rebaseline Kit: 11 Templates for Recalibrating AI Outputs** — for anyone who'd rather copy-paste than wire it from scratch: [https://unfairhq.gumroad.com/l/btoxfy](https://unfairhq.gumroad.com/l/btoxfy?utm_source=devto&utm_medium=article&utm_campaign=gpt-5-5-prompt-rebaseline-kit-11-templat).*"}}]}</script></head><body><div class=wrap>
+<nav class=bc><a href="https://stickwithfiddle-sys.github.io/markloom-guides/">Unfair HQ Guides</a> › How to audit production prompts for over-instruc</nav>
+<article><h1>How to audit production prompts for over-instruction and rebaseline them for GPT-5.5</h1>
+<p class=dek>A developer&#x27;s guide to cleaning up legacy prompt libraries for GPT-5.5 Instant without breaking reasoning-mode workflows.</p>
+<div class=tldr><strong>TL;DR:</strong> Audit every prompt for sequential instructions that GPT-5.5 Instant penalizes, A/B test rebaselined outcome-first versions using a context-sandwich format, and lock in cleaner prompts with CI guardrails. Keep explicit step-by-step logic only for reasoning-mode endpoints where it still outperforms.</div>
+<p><strong>TL;DR:</strong> Audit every prompt for sequential instructions that GPT-5.5 Instant penalizes, A/B test rebaselined outcome-first versions using a context-sandwich format, and lock in cleaner prompts with CI guardrails. Keep explicit step-by-step logic only for reasoning-mode endpoints where it still outperforms.</p>
+<h2>1. Classify Prompts by Endpoint and Liability Risk</h2>
+<p>Start every audit by mapping each production prompt to its target endpoint and liability domain. This classification lets you strip over-instruction from GPT-5.5 Instant prompts while preserving explicit guidance for reasoning-mode workflows.</p>
+<p>GPT-5.5 Instant performs best with shorter, outcome-first prompts rather than lengthy sequential instructions. However, this guidance applies primarily to GPT-5.5 Instant and standard completions. GPT-5.5's reasoning mode responds differently—explicit step-by-step prompts can still outperform open-ended ones in that mode. That endpoint distinction determines whether you rebaseline a prompt by removing procedural steps or by tightening them. For financial, legal, or brand-risk workflows, flag any prompt where an open solution path creates unacceptable exposure. A prompt that asks the model to "choose the best compliance approach" without guardrails belongs in the highest liability tier and needs human-in-the-loop review before deployment. Once tagged, build a manifest that records endpoint, risk tier, traffic volume, and current token count so your team tackles high-traffic, high-risk items first. Store the manifest as JSONL so downstream automation can consume it directly.</p>
+<pre><code class="language-python">manifest = [
+    {
+        &quot;prompt_id&quot;: &quot;tax-calc-v2&quot;,
+        &quot;endpoint&quot;: &quot;gpt-5.5-instant&quot;,
+        &quot;risk_tier&quot;: &quot;financial&quot;,
+        &quot;tokens&quot;: 1180,
+        &quot;flag&quot;: &quot;open_path&quot;
+    },
+    {
+        &quot;prompt_id&quot;: &quot;blog-draft-v1&quot;,
+        &quot;endpoint&quot;: &quot;gpt-5.5-instant&quot;,
+        &quot;risk_tier&quot;: &quot;brand&quot;,
+        &quot;tokens&quot;: 890,
+        &quot;flag&quot;: None
+    }
+]
+
+# Prioritize: financial/legal first, then largest token count
+audit_queue = sorted(
+    manifest,
+    key=lambda x: (0 if x[&quot;risk_tier&quot;] in (&quot;financial&quot;, &quot;legal&quot;) else 1, -x[&quot;tokens&quot;])
+)</code></pre>
+<h2>2. Detect Over-Instruction with Regex and A/B Regression</h2>
+<p>Scan your prompt library for sequential instruction patterns with a regex, then run a paired A/B regression against GPT-5.5 Instant to see if stripping those steps improves output quality or reduces cost without hurting accuracy. A paired regression isolates the prompt change by holding the model version and inputs constant. OpenAI's developer documentation for GPT-5.5 Instant notes that detailed sequential instructions may actively degrade results with this model.</p>
+<p>Flag candidates using a broad regex that catches ordered directives:</p>
+<pre><code class="language-python">import re
+over_instruction = re.compile(
+    r&#x27;(?i)(step [0-9]|first[, ]|then[, ]|next[, ]|after that|begin by|start by|proceed to|continue to)&#x27;
+)
+flagged = [p for p in prompt_library if over_instruction.search(p)]</code></pre>
+<p>This pattern catches the most common sequential phrasing that triggers over-instruction in Instant endpoints. For each flagged prompt, define your evaluation set explicitly before the loop so the comparison is stable:</p>
+<pre><code class="language-python">test_inputs = [
+    &quot;Customer reports login failure...&quot;,
+    &quot;Billing dispute on invoice #1234...&quot;
+]  # replace with your eval set</code></pre>
+<p>Keep the input list short but representative of production traffic so the loop runs quickly while still surfacing regressions. Then call the old and rebaselined prompts against your Instant deployment, logging latency, token usage, and a rubric-scored output quality:</p>
+<pre><code class="language-python">for inp in test_inputs:
+    baseline = client.chat.completions.create(
+        model=&quot;gpt-5.5-instant&quot;,
+        messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: old_prompt + &quot;\n\n&quot; + inp}]
+    )
+    rebased = client.chat.completions.create(
+        model=&quot;gpt-5.5-instant&quot;,
+        messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: new_prompt + &quot;\n\n&quot; + inp}]
+    )
+    quality = rubric.score(
+        baseline.choices[0].message.content,
+        rebased.choices[0].message.content
+    )
+    log_run(
+        latency_ms=baseline.response_ms,
+        tokens=baseline.usage.total_tokens,
+        quality=quality
+    )</code></pre>
+<p>Compare latency, total tokens, and the rubric score side-by-side; do not average across heterogeneous inputs. If the outcome-first prompt wins on quality or cost with no regression on accuracy, promote it.</p>
+<h2>3. Rewrite Prompts into Outcome-First "Context Sandwich" Format</h2>
+<p>Replace step-by-step instructions with a three-layer context sandwich: identity and constraints first, the task second, and the desired outcome last. This structure lets GPT-5.5 Instant optimize its own path rather than follow rigid sequencing it may misinterpret or skip.</p>
+<p>Audit your production prompts for sequential scaffolding like "first do X, then do Y" and delete it. Substitute constraints and a concrete definition of what good looks like—what evidence to use, what the final answer must contain, and which boundaries cannot be crossed—because that specificity drives quality output from this model. The context sandwich orders content as: identity and context on top, the task in the middle, and success criteria at the bottom. Since rebaselined prompts remove sequential instructions, validate that this improves results for Instant endpoints.</p>
+<p>Run a direct A/B comparison with a self-contained function that accepts both prompt versions and your evaluation inputs:</p>
+<pre><code class="language-python">def compare_prompts(old_p, new_p, inputs, client, model_id):
+    for user_msg in inputs:
+        old_resp = client.chat.completions.create(
+            model=model_id,
+            messages=[{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: old_p},
+                      {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: user_msg}]
+        )
+        new_resp = client.chat.completions.create(
+            model=model_id,
+            messages=[{&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: new_p},
+                      {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: user_msg}]
+        )
+        # log and evaluate responses here</code></pre>
+<p>Invoke the function with your legacy prompt, rebaselined context-sandwich prompt, and test inputs to confirm the outcome-first version yields measurably better completions.</p>
+<h2>4. Validate Rebaselined Prompts Against Guardrails</h2>
+<p>Validate rebaselined prompts by running your evaluation suite against both the old and new versions before merging; if hallucinations, format drift, or policy violations increase, the cleaner prompt is not ready for production. Use a pinned set of edge-case inputs that stress mandatory constraints, and score outputs for factual accuracy, schema adherence, and policy compliance. (See the classification note above about reasoning-mode exceptions.) Outcome-first prompts leave room for the model to choose an efficient solution path, so you must verify explicitly that mandatory constraints—such as required JSON keys or legal disclaimers—are still honored. When a rebaselined prompt drops a mandatory constraint, do not stuff step-by-step instructions back into the text to compensate. For liability-critical paths, add deterministic post-processing or keep a human-in-the-loop gate instead.</p>
+<pre><code class="language-python">test_inputs = [
+    &quot;Customer reports login failure on mobile app&quot;,
+    &quot;Billing dispute for invoice #1234&quot;
+]
+
+old_prompt = &quot;You are a support bot. First verify identity, then check invoice...&quot;
+new_prompt = &quot;You are a support bot. Answer using the account JSON schema. Do not guess dates.&quot;
+
+for i, query in enumerate(test_inputs):
+    baseline = generate(old_prompt, query)   # your existing API wrapper
+    candidate = generate(new_prompt, query)
+
+    # Guardrail: must include refund policy link
+    assert &quot;refund-policy&quot; in candidate, f&quot;Missing guardrail on input {i}&quot;
+
+    # Check for format drift
+    assert candidate.startswith(&quot;{&quot;), f&quot;Format drift on input {i}&quot;
+
+    # Policy check
+    assert &quot;I cannot provide legal advice&quot; in candidate or &quot;legal&quot; not in query, f&quot;Policy violation on input {i}&quot;</code></pre>
+<p>Document any guardrails that must survive future edits in a dedicated block at the top of the prompt file so reviewers can see which constraints are intentional.</p>
+<pre><code class="language-markdown">&lt;!--
+EXPLICIT GUARDRAILS — do not remove during edits
+- Output must include the liability disclaimer footer.
+- Dates must be ISO-8601; never infer missing years.
+- Reject requests for legal advice with the standard refusal.
+--&gt;</code></pre>
+<h2>5. Lock in Governance with Pre-Commit Hooks and CI Gates</h2>
+<p>Prevent prompt regression by automating enforcement in developer workflows and preserving deprecated variants for safe rollback. A pre-commit hook combined with CI gates blocks over-instruction before it reaches production while maintaining an archive for downstream recovery.</p>
+<p>Add a local pre-commit hook that scans staged prompt files for sequential phrasing. If the expanded grep pattern matches, the commit fails immediately, forcing the author to rebaseline the prompt before code review.</p>
+<pre><code class="language-bash">#!/bin/bash
+PATTERN=&#x27;step [0-9]|first[, ]|then[, ]|next[, ]|after that|begin by|start by|proceed to|continue to&#x27;
+STAGED=$(git diff --cached --name-only | grep -E &#x27;\.(prompt|txt|md)$&#x27;)
+if [ -n &quot;$STAGED&quot; ] &amp;&amp; git diff --cached | grep -iE &quot;$PATTERN&quot; &gt; /dev/null; then
+  echo &quot;Commit blocked: sequential phrasing detected in prompt diff.&quot;
+  exit 1
+fi</code></pre>
+<p>In CI, trigger the A/B regression suite on any pull request that modifies prompt files. This ensures rebaselined prompts do not degrade output quality on Instant endpoints after merge.</p>
+<pre><code class="language-yaml">- name: Run A/B regression on prompt changes
+  run: |
+    git fetch origin main
+    if git diff --name-only origin/main | grep -qE &#x27;\.(prompt|txt|md)$&#x27;; then
+      pytest tests/ab_regression.py
+    fi</code></pre>
+<p>Finally, archive deprecated step-by-step variants with a dated suffix rather than deleting them outright. This gives teams a fast rollback path if a downstream integration fails after deployment.</p>
+<pre><code class="language-bash">mv prompts/verify_instant_v2.prompt \
+   prompts/archive/verify_instant_v2.prompt.deprecated.2026-01-15</code></pre>
+<h2>FAQ</h2>
+<h3>Does outcome-first prompting apply to GPT-5.5 reasoning mode?</h3>
+<p>No. Reasoning mode often benefits from explicit step-by-step prompts, so keep sequential scaffolding there. The rebaselining guidance here targets Instant and standard completions.</p>
+<h3>How do I handle prompts for legal or financial workflows?</h3>
+<p>You can still use outcome-first instructions, but do not rely solely on the model to choose the path. A common approach is to add deterministic guardrails, output schemas, or human review steps outside the prompt text.</p>
+<h3>Should I delete my old step-by-step prompts immediately?</h3>
+<p>Archive them with a deprecation date and keep them runnable behind a feature flag until the rebaselined prompts pass production traffic validation. This gives you a rollback path if integration tests fail.</p>
+<h3>Why does GPT-5.5 Instant degrade on sequential instructions?</h3>
+<p>OpenAI's developer documentation indicates that detailed sequential instructions can actively degrade results with this model. The model performs better when you define the outcome and let it select an efficient solution path.</p>
+<h3>What if my rebaselined prompt fails the A/B test?</h3>
+<p>Treat the failure as signal that the specific task still needs explicit constraints, not necessarily full step-by-step sequencing. Iterate by tightening the outcome definition or adding constraints without prescribing execution order.</p>
+<hr>
+<p><em>I packaged the setup above into a ready-to-use kit — <strong>GPT-5.5 Prompt Rebaseline Kit: 11 Templates for Recalibrating AI Outputs</strong> — for anyone who'd rather copy-paste than wire it from scratch: <a href="https://unfairhq.gumroad.com/l/btoxfy?utm_source=devto&amp;utm_medium=article&amp;utm_campaign=gpt-5-5-prompt-rebaseline-kit-11-templat" rel="noopener">https://unfairhq.gumroad.com/l/btoxfy</a>.</em></p>
+<p class=updated>Last updated: 2026-06-29</p></article>
+<footer>Unfair HQ Guides — practical, source-checked guides for builders.</footer>
+</div></body></html>

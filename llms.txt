@@ -3,6 +3,7 @@
 > Practical, source-checked guides for developers and builders.
 
 ## Guides
+- [How to audit production prompts for over-instruction and rebaseline them for GPT-5.5](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-audit-production-prompts-for-over-instruction-and-rebaseline-th/): A developer's guide to cleaning up legacy prompt libraries for GPT-5.5 Instant without breaking reas
 - [How to Set Up a Local Failover for Your Coding Agent When API Rate Limits or Outages Strike](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-set-up-a-local-failover-for-your-coding-agent-when-api-rate-lim/): A practical guide to keeping your AI coding agent running when external LLM APIs throttle or fail, u
 - [How to comply with the EU AI Act August 2026 deadline: a founder’s checklist for risk classification, Annex IV documentation, and Article 50 transparency](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-comply-with-the-eu-ai-act-august-2026-deadline-a-founder-s-chec/): A practical, step-by-step compliance checklist for startup founders and CTOs preparing for the EU AI
 - [How to Control GitHub Copilot AI Credit Costs After the June 1 Pricing Switch](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-control-github-copilot-ai-credit-costs-after-the-june-1-pricing/): Practical strategies to reduce token usage, enforce model guardrails, and optimize prompts under Git
