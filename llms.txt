@@ -3,6 +3,7 @@
 > Practical, source-checked guides for developers and builders.
 
 ## Guides
+- [How to Use Git Worktrees to Run Claude Code and Cursor Agents in Parallel Without Branch Collisions](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-use-git-worktrees-to-run-claude-code-and-cursor-agents-in-paral/): A practical playbook for isolating multiple AI coding agents in separate directory checkouts so they
 - [How to Build Production-Ready MCP Servers with FastMCP in Python: From Complex Pydantic Input Validation to ASGI Deployment](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-production-ready-mcp-servers-with-fastmcp-in-python-from-/): A practical guide to structuring, validating, securing, and deploying FastMCP 3.0 servers using Pyda
 - [How to audit production prompts for over-instruction and rebaseline them for GPT-5.5](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-audit-production-prompts-for-over-instruction-and-rebaseline-th/): A developer's guide to cleaning up legacy prompt libraries for GPT-5.5 Instant without breaking reas
 - [How to Set Up a Local Failover for Your Coding Agent When API Rate Limits or Outages Strike](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-set-up-a-local-failover-for-your-coding-agent-when-api-rate-lim/): A practical guide to keeping your AI coding agent running when external LLM APIs throttle or fail, u
