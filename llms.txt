@@ -3,6 +3,7 @@
 > Practical, source-checked guides for developers and builders.
 
 ## Guides
+- [How to Build a Solo Founder Automation Stack for Inbox Triage, Lead Qualification, and Daily Revenue Digests](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-solo-founder-automation-stack-for-inbox-triage-lead-qua/): A developer's guide to wiring Gmail, Redis-backed Bull queues, and scheduled revenue workers into on
 - [How to Use Git Worktrees to Run Claude Code and Cursor Agents in Parallel Without Branch Collisions](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-use-git-worktrees-to-run-claude-code-and-cursor-agents-in-paral/): A practical playbook for isolating multiple AI coding agents in separate directory checkouts so they
 - [How to use Git worktrees to run multiple Claude Code and Cursor agents in parallel without branch collisions](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-use-git-worktrees-to-run-multiple-claude-code-and-cursor-agents/): A practical guide to creating isolated working trees for parallel AI-assisted development, merging r
 - [How to Build Production-Ready MCP Servers with FastMCP in Python: From Complex Pydantic Input Validation to ASGI Deployment](https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-production-ready-mcp-servers-with-fastmcp-in-python-from-/): A practical guide to structuring, validating, securing, and deploying FastMCP 3.0 servers using Pyda

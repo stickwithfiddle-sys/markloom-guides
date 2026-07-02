@@ -1,0 +1,170 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>How to Build a Solo Founder Automation Stack for Inbox Triage, Lead Qualification, and Daily Revenue Digests</title><meta name=description content="A developer&#x27;s guide to wiring Gmail, Redis-backed Bull queues, and scheduled revenue workers into one maintainable system."><link rel=canonical href="https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-solo-founder-automation-stack-for-inbox-triage-lead-qua/"><meta property="og:type" content="article"><meta property="og:title" content="How to Build a Solo Founder Automation Stack for Inbox Triage, Lead Qualification, and Daily Revenue Digests"><meta property="og:description" content="A developer&#x27;s guide to wiring Gmail, Redis-backed Bull queues, and scheduled revenue workers into one maintainable system."><style>:root{--ink:#1a1d24;--dim:#5a6473;--bg:#fbfaf8;--card:#fff;--line:#e7e4de;--accent:#b4622a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font:17px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+nav.bc{font-size:13px;color:var(--dim);margin-bottom:18px}nav.bc a{color:var(--dim);text-decoration:none}
+nav.bc a:hover{color:var(--accent)}
+h1{font-size:33px;line-height:1.2;margin:.2em 0 .3em}h2{font-size:23px;margin:1.6em 0 .5em}
+h3{font-size:18px;margin:1.3em 0 .4em}a{color:var(--accent)}
+.dek{color:var(--dim);font-size:18px;margin:0 0 18px}
+.tldr{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+border-radius:10px;padding:12px 16px;margin:0 0 26px;font-size:16px}
+pre{background:#15181e;color:#e6e9ef;border-radius:10px;padding:14px 16px;overflow:auto;font-size:14px;line-height:1.5}
+code{background:#eee9e2;padding:.1em .35em;border-radius:5px;font-size:.9em}
+pre code{background:none;padding:0;font-size:13.5px}
+blockquote{border-left:3px solid var(--line);margin:0;padding:.2em 1em;color:var(--dim)}
+.updated{color:var(--dim);font-size:13px;margin-top:6px}
+.related{margin-top:48px;border-top:1px solid var(--line);padding-top:18px}
+.related h2{font-size:16px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}
+.related ul{padding-left:18px}.cta{margin-top:36px;background:var(--card);border:1px solid var(--line);
+border-radius:12px;padding:18px 20px}.cards{display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:var(--accent)}.card b{display:block;font-size:17px}.card span{color:var(--dim);font-size:14px}
+footer{margin-top:60px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:16px}</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Unfair HQ Guides", "url": "https://stickwithfiddle-sys.github.io/markloom-guides"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to Build a Solo Founder Automation Stack for Inbox Triage, Lead Qualification, and Daily Revenue Digests", "description": "A developer's guide to wiring Gmail, Redis-backed Bull queues, and scheduled revenue workers into one maintainable system.", "datePublished": "2026-07-02", "dateModified": "2026-07-02", "author": {"@type": "Organization", "name": "Unfair HQ Guides"}, "mainEntityOfPage": "https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-solo-founder-automation-stack-for-inbox-triage-lead-qua/", "keywords": "automation, solo-founder, bull-queue, gmail-webhooks, revenue-digest"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Unfair HQ Guides", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/"}, {"@type": "ListItem", "position": 2, "name": "How to Build a Solo Founder Automation Stack for Inbox Triag", "item": "https://stickwithfiddle-sys.github.io/markloom-guides/how-to-build-a-solo-founder-automation-stack-for-inbox-triage-lead-qua/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much founder time does this actually save?", "acceptedAnswer": {"@type": "Answer", "text": "By automating triage, qualification, and daily reporting, you replace the repetitive operational work that consumes the majority of a solo founder's day. Teams using self-serve automation often reduce per-customer onboarding and support load from 4hr/customer to 30min/customer."}}, {"@type": "Question", "name": "Do I need Redis even if my volume is low?", "acceptedAnswer": {"@type": "Answer", "text": "Bull requires Redis to persist job state and enforce idempotency. Even at low volume, Redis prevents duplicate webhooks from creating multiple CRM entries or draft replies. A common approach is to run Redis in Docker for local development and use a managed provider in production."}}, {"@type": "Question", "name": "How do I handle Gmail OAuth renewals without manual intervention?", "acceptedAnswer": {"@type": "Answer", "text": "Store refresh tokens in a secrets manager. A common approach is to schedule a background refresh before expiry so push notifications remain active and your webhook continues to receive events."}}, {"@type": "Question", "name": "What happens if the revenue API is down when the digest runs?", "acceptedAnswer": {"@type": "Answer", "text": "Add a circuit breaker or try/catch that skips the digest and alerts you via email instead of posting a partial or misleading report to Slack. Keep the worker stateless so the next cron run attempts the fetch again."}}, {"@type": "Question", "name": "Can I add new intents without redeploying everything?", "acceptedAnswer": {"@type": "Answer", "text": "Version your payload schema inside the webhook handler. Treat unknown intents as no-ops by returning 202. Deploy the new worker module first, then start sending the new intent from Gmail or your upstream source."}}]}</script></head><body><div class=wrap>
+<nav class=bc><a href="https://stickwithfiddle-sys.github.io/markloom-guides/">Unfair HQ Guides</a> › How to Build a Solo Founder Automation Stack for</nav>
+<article><h1>How to Build a Solo Founder Automation Stack for Inbox Triage, Lead Qualification, and Daily Revenue Digests</h1>
+<p class=dek>A developer&#x27;s guide to wiring Gmail, Redis-backed Bull queues, and scheduled revenue workers into one maintainable system.</p>
+<div class=tldr><strong>TL;DR:</strong> Wire a Node.js webhook receiver to Gmail push notifications, enqueue triage and qualification jobs into Redis-backed Bull queues with idempotent job IDs, and schedule a daily worker that aggregates revenue from your payment API into a Slack digest. This replaces manual inbox sorting, lead scoring, and daily reporting for one-person SaaS operators.</div>
+<p><strong>TL;DR:</strong> Wire a Node.js webhook receiver to Gmail push notifications, enqueue triage and qualification jobs into Redis-backed Bull queues with idempotent job IDs, and schedule a daily worker that aggregates revenue from your payment API into a Slack digest. This replaces manual inbox sorting, lead scoring, and daily reporting for one-person SaaS operators.</p>
+<h2>Architecture and Stack Boundaries</h2>
+<p>Your automation architecture should decouple ingestion from processing with Redis-backed queues and stateless workers, splitting the system into three bounded contexts: Inbox Triage, Lead Qualification, and Daily Revenue Digest. Email remains where a huge chunk of work and revenue gets done, so Inbox Triage consumes Gmail push notifications, classifies intent, and drafts replies. Lead Qualification enriches signups and scores them before routing to Slack or a CRM. Daily Revenue Digest runs on a schedule, queries your payment API, and posts a summary so you never manually compile numbers again.</p>
+<p>Keep each worker idempotent and avoid shared mutable state; if a worker crashes mid-flight, Redis lets another instance pick up the job without corruption. Bounded contexts prevent logic from bleeding across concerns: the inbox worker never touches CRM writes, and the revenue worker never polls Gmail. Because the queue acts as the single source of truth, you can scale workers horizontally without worrying about duplicate drafts or double-scored leads. This structure ensures that a restart or redeploy never leaves the system in an inconsistent state. A common approach is to generate deterministic job IDs from the event attributes and process them in isolated, stateless handlers:</p>
+<pre><code class="language-javascript">app.post(&#x27;/gmail-webhook&#x27;, async (req, res) =&gt; {
+  const { email, intent, draftReply } = req.body;
+  await inboxQueue.add(
+    { email, intent, draftReply },
+    { jobId: `${intent}-${email}-${req.headers[&#x27;x-request-id&#x27;]}` }
+  );
+  res.sendStatus(200);
+});</code></pre>
+<pre><code class="language-javascript">leadQueue.process(async (job) =&gt; {
+  const { email } = job.data;
+  const enriched = await qualifyLead(email);
+  await routeToCRM(enriched);
+});</code></pre>
+<pre><code class="language-javascript">digestQueue.add({}, {
+  repeat: { cron: &#x27;0 9 * * *&#x27; },
+  jobId: &#x27;daily-revenue&#x27;
+});</code></pre>
+<h2>Idempotent Inbox Triage with Gmail Webhooks</h2>
+<p>Use Gmail API push notifications to POST incoming messages to an HTTPS endpoint, then deduplicate processing with a composite Bull job ID so webhook retries never spawn duplicate drafts.</p>
+<p>Start by registering your domain and a specific endpoint in Google Cloud Console as a push receiver for a Gmail label or the entire inbox. Each notification hits your Express server with a minimal payload; you then fetch the full thread if needed and enqueue the triage task. Inside the route handler, extract the fields and enqueue the job with a deterministic <code>jobId</code> built from <code>intent</code>, <code>email</code>, and the request ID header. This makes the operation idempotent: if Gmail retries the delivery because of a network timeout, Bull rejects the duplicate because the job ID already exists.</p>
+<pre><code class="language-javascript">app.post(&#x27;/webhook&#x27;, (req, res) =&gt; {
+  const { email, intent, startTime, endTime, draftReply } = req.body;
+  const requestId = req.headers[&#x27;x-request-id&#x27;] || `${Date.now()}`;
+
+  triageQueue.add(
+    { email, intent, startTime, endTime, draftReply },
+    { jobId: `${intent}-${email}-${requestId}` }
+  );
+
+  res.sendStatus(202);
+});</code></pre>
+<p>The worker picks up the job, calls an LLM to classify the thread intent, and either commits a draft reply or surfaces complex issues directly to you. A separate queue layer can apply label moves or archive commands back through the Gmail API once the draft is confirmed. Because the webhook returns <code>202 Accepted</code> immediately, the HTTP timeout window never blocks the worker. Stacks that auto-resolve routine tickets while escalating only exceptions can handle 60–80% of volume without human intervention.</p>
+<h2>Idempotent Lead Qualification with Bull</h2>
+<p>Run lead qualification in a dedicated Bull queue with deterministic job IDs so enrichment work never blocks your webhook and duplicate runs collapse to a single job. Because lead qualification is CPU-bound and relies on slow enrichment APIs, the webhook should immediately return a 202 Accepted and offload scoring to an asynchronous worker backed by Redis.</p>
+<pre><code class="language-javascript">app.post(&#x27;/webhook&#x27;, (req, res) =&gt; {
+  const { email, intent, startTime, endTime, draftReply } = req.body;
+  const requestId = req.headers[&#x27;x-request-id&#x27;] || `${Date.now()}`;
+
+  if (intent === &#x27;lead-qualify&#x27;) {
+    leadQueue.add(
+      { email, intent, startTime, endTime, draftReply },
+      { jobId: `${intent}-${email}-${requestId}` }
+    );
+  }
+
+  res.sendStatus(202);
+});</code></pre>
+<p>The worker pulls the job, calls your enrichment provider, applies scoring rules, and posts qualified leads to a Slack channel. Keeping the job ID deterministic—composed from <code>intent</code>, <code>email</code>, and the request ID—guarantees idempotency even if the webhook fires twice. The same automation layer can draft follow-up emails and calendar invites, cutting manual sales ops to near zero.</p>
+<pre><code class="language-javascript">leadQueue.process(async (job) =&gt; {
+  const { email, draftReply } = job.data;
+  const profile = await enrichLead(email);
+  const score = applyScoringRules(profile);
+  if (score &gt;= 70) {
+    await notifySlack({ email, score, profile });
+    if (draftReply) await draftFollowUpAndInvite(email);
+  }
+  return { score, qualified: score &gt;= 70 };
+});</code></pre>
+<h2>Daily Revenue Digest Worker</h2>
+<p>A daily revenue worker is a stateless Node.js cron job that queries your payment API each morning and posts a formatted summary to Slack, replacing the manual spreadsheet review that consumes founder hours.</p>
+<p>Schedule the worker with <code>node-cron</code> to run at 09:00 UTC. Derive the reporting window from the current UTC date rather than storing a mutable cursor. By computing <code>start</code> and <code>end</code> as midnight boundaries for the previous day, the job stays idempotent: reruns or restarts always target the same 24-hour window and produce an identical digest. Query your payment API for total revenue, new MRR, and churn within that window, then format a concise Slack message. Keep the worker stateless by injecting the Slack client and API wrapper as arguments instead of relying on module-level state.</p>
+<pre><code class="language-javascript">// workers/revenue.js
+const cron = require(&#x27;node-cron&#x27;);
+
+module.exports = function startRevenueWorker(slack, fetchDailyRevenue) {
+  cron.schedule(&#x27;0 9 * * *&#x27;, async () =&gt; {
+    const end = new Date();
+    end.setUTCHours(0, 0, 0, 0);
+    const start = new Date(end);
+    start.setUTCDate(start.getUTCDate() - 1);
+
+    const { total, newMrr, churn } = await fetchDailyRevenue(start, end);
+    await slack.chat.postMessage({
+      channel: &#x27;#founder-digest&#x27;,
+      text: `*Daily Revenue*\nTotal: $${total}\nNew MRR: $${newMrr}\nChurn: $${churn}`
+    });
+  });
+};</code></pre>
+<p>This pattern removes the need to open dashboards or sheets to understand cash flow, giving the founder an immediate, automated pulse on business health.</p>
+<h2>Wiring It All Together and Onboarding Guardrails</h2>
+<p>Run a single Node process that mounts your webhook, instantiates Bull queues, and attaches worker modules so every inbound event flows through one router. A common approach is to validate <code>x-request-id</code> before composing the <code>jobId</code>, return HTTP 202 immediately to signal acceptance and prevent sender retries, emit structured JSON logs with the request context, and cap worker concurrency so downstream APIs do not throttle.</p>
+<p>The consolidated <code>server.js</code> below keeps routing and job creation in one place. It destructures the payload inside the route handler, enforces idempotency with a consistent <code>intent-email-requestId</code> composite, and returns <code>202</code> before processing begins. Worker files are imported at the bottom so processors attach to the same queue instances, and the identical <code>email</code> variable is reused across both triage and lead queues to avoid undefined placeholders in the <code>jobId</code>. Redis acts as the durable backing store, so jobs survive deploys and restarts.</p>
+<pre><code class="language-javascript">// server.js
+const express = require(&#x27;express&#x27;);
+const Queue = require(&#x27;bull&#x27;);
+
+const app = express();
+app.use(express.json());
+
+const triageQueue = new Queue(&#x27;inbox-triage&#x27;, process.env.REDIS_URL);
+const leadQueue = new Queue(&#x27;lead-qualification&#x27;, process.env.REDIS_URL);
+
+app.post(&#x27;/webhook&#x27;, (req, res) =&gt; {
+  const { email, intent, startTime, endTime, draftReply } = req.body;
+  const requestId = req.headers[&#x27;x-request-id&#x27;] || `${Date.now()}-${Math.random()}`;
+
+  if (intent === &#x27;inbox-triage&#x27;) {
+    triageQueue.add(
+      { email, intent, startTime, endTime, draftReply },
+      { jobId: `${intent}-${email}-${requestId}` }
+    );
+  }
+
+  if (intent === &#x27;lead-qualify&#x27;) {
+    leadQueue.add(
+      { email, intent, startTime, endTime, draftReply },
+      { jobId: `${intent}-${email}-${requestId}` }
+    );
+  }
+
+  res.sendStatus(202);
+});
+
+require(&#x27;./workers/triage&#x27;)(triageQueue);
+require(&#x27;./workers/lead&#x27;)(leadQueue);
+require(&#x27;./workers/revenue&#x27;)();
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =&gt; console.log(`Webhook server on ${PORT}`));</code></pre>
+<p>Keep the webhook handler stateless and let Bull manage retries and backoff in the worker processes. Limiting concurrency to three jobs per worker is a typical safeguard against CRM or LLM rate limits. For observability, write one structured log line per request that includes the <code>jobId</code>, intent, and timestamp so you can trace duplicates across services.</p>
+<h2>FAQ</h2>
+<h3>How much founder time does this actually save?</h3>
+<p>By automating triage, qualification, and daily reporting, you replace the repetitive operational work that consumes the majority of a solo founder's day. Teams using self-serve automation often reduce per-customer onboarding and support load from 4hr/customer to 30min/customer.</p>
+<h3>Do I need Redis even if my volume is low?</h3>
+<p>Bull requires Redis to persist job state and enforce idempotency. Even at low volume, Redis prevents duplicate webhooks from creating multiple CRM entries or draft replies. A common approach is to run Redis in Docker for local development and use a managed provider in production.</p>
+<h3>How do I handle Gmail OAuth renewals without manual intervention?</h3>
+<p>Store refresh tokens in a secrets manager. A common approach is to schedule a background refresh before expiry so push notifications remain active and your webhook continues to receive events.</p>
+<h3>What happens if the revenue API is down when the digest runs?</h3>
+<p>Add a circuit breaker or try/catch that skips the digest and alerts you via email instead of posting a partial or misleading report to Slack. Keep the worker stateless so the next cron run attempts the fetch again.</p>
+<h3>Can I add new intents without redeploying everything?</h3>
+<p>Version your payload schema inside the webhook handler. Treat unknown intents as no-ops by returning 202. Deploy the new worker module first, then start sending the new intent from Gmail or your upstream source.</p>
+<h2>References for further reading</h2>
+<p>_Sources consulted while researching this guide, included so you can verify the details and go deeper. Listing them is not a claim that every line was independently fact-checked._</p>
+<ul><li><a href="https://f3fundit.com/ai-project-management-stack-solopreneurs-2026-guide" rel="noopener">AI Project Management Stack for Solopreneurs: 2026 Guide</a></li><li><a href="https://tellrlabs.io/automation-stack-solo-founders-tools" rel="noopener">Automation Stack for Solo Founders: Tools That Replace a Team</a></li><li><a href="https://like2byte.com/ai-tools-solopreneurs" rel="noopener">Best AI Tools for Solopreneurs in 2026: The Lean Stack</a></li><li><a href="https://getcoherence.io/blog/solo-founder-workflow-automation-guide" rel="noopener">The Complete Solo Founder Workflow Automation Guide</a></li><li><a href="https://www.folk.app/articles/sales-stack-for-startup-founders" rel="noopener">Top 5 Sales Tools for Startup Founders in 2026</a></li></ul>
+<hr>
+<p><em>I packaged the setup above into a ready-to-use kit — <strong>Solo Founder Brain: OpenClaw Skill + Deployment Pack</strong> — for anyone who'd rather copy-paste than wire it from scratch: <a href="https://unfairhq.gumroad.com/l/uzmtclu?utm_source=devto&amp;utm_medium=article&amp;utm_campaign=solo-founder-brain-openclaw-skill-deploy" rel="noopener">https://unfairhq.gumroad.com/l/uzmtclu</a>.</em></p>
+<p class=updated>Last updated: 2026-07-02</p></article>
+<footer>Unfair HQ Guides — practical, source-checked guides for builders.</footer>
+</div></body></html>
